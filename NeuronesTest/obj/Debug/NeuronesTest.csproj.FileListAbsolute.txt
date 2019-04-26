@@ -1,0 +1,7 @@
+C:\Neurones\NeuronesTest\bin\Debug\NeuronesTest.dll
+C:\Neurones\NeuronesTest\bin\Debug\NeuronesTest.pdb
+C:\Neurones\NeuronesTest\bin\Debug\Neurones.dll
+C:\Neurones\NeuronesTest\bin\Debug\Neurones.pdb
+C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.csprojResolveAssemblyReference.cache
+C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.dll
+C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.pdb
