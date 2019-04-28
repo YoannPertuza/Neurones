@@ -2,3 +2,4 @@ C:\Neurones\Neurones\bin\Debug\Neurones.dll
 C:\Neurones\Neurones\bin\Debug\Neurones.pdb
 C:\Neurones\Neurones\obj\Debug\Neurones.dll
 C:\Neurones\Neurones\obj\Debug\Neurones.pdb
+C:\Neurones\Neurones\obj\Debug\Neurones.csproj.CoreCompileInputs.cache

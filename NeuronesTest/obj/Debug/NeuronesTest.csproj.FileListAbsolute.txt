@@ -2,6 +2,10 @@ C:\Neurones\NeuronesTest\bin\Debug\NeuronesTest.dll
 C:\Neurones\NeuronesTest\bin\Debug\NeuronesTest.pdb
 C:\Neurones\NeuronesTest\bin\Debug\Neurones.dll
 C:\Neurones\NeuronesTest\bin\Debug\Neurones.pdb
-C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.csprojResolveAssemblyReference.cache
 C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.dll
 C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.pdb
+C:\Neurones\NeuronesTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Neurones\NeuronesTest\bin\Debug\fr\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
+C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.csprojAssemblyReference.cache
+C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.csproj.CoreCompileInputs.cache
+C:\Neurones\NeuronesTest\obj\Debug\NeuronesTest.csproj.CopyComplete
