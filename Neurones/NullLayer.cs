@@ -38,6 +38,11 @@ namespace Neurones
         {
             throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
         }
+
+        public Layer backProp(IEnumerable<Error> errors, IEnumerable<Synapse> synapses)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

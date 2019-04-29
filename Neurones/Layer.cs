@@ -7,7 +7,7 @@ namespace Neurones
 		Number outputValue(int targetNeurone);
         Layer withPrevLayer(Layer layer);
         Layer propagate();
-        Layer backProp(IEnumerable<Error> errors);
+        Layer backProp(IEnumerable<Error> errors, IEnumerable<Synapse> synapses);
         IEnumerable<Error> errors(IEnumerable<Error> nextLayerErrors, IEnumerable<Synapse> synapses);
         Layer withNewSet(Layer inputLayer);
 	}

@@ -54,14 +54,10 @@ namespace Neurones
             return
                 new ExitError(
                     this.index,
-                    new Mult(
-                        this.value,
-                        new Substr(1, this.value),
-                        new Add(
-                            synapses
-                            .Where(s => s.isFromNeurone(this.index))
-                            .Select(s => s.error(nextErrors)).ToArray()
-                        )
+                    new Add(                      
+                        synapses
+                        .Where(s => s.isFromNeurone(this.index))
+                        .Select(s => s.error(nextErrors)).ToArray()                        
                     )
                 );               
         }
@@ -72,13 +68,11 @@ namespace Neurones
         }
 
         public Neurone withNewSynapse(IEnumerable<Error> nextErrors, Layer prev)
-        {
-            var neuroneError = nextErrors.ToList().Find(e => e.neuroneIndex() == this.index).asNumber();
-          
+        {   
             return
                 new DeepNeurone(
                     this.index,
-                    this.synapses.Select(s => s.withAdjustedWeight(neuroneError, prev)).ToArray()
+                    this.synapses.Select(s => s.withAdjustedWeight(nextErrors, prev, this.value)).ToArray()
                 );
                     
         }

@@ -29,7 +29,7 @@ namespace Neurones
             return new List<Error>();
         }
 
-        public Layer backProp(IEnumerable<Error> errors)
+        public Layer backProp(IEnumerable<Error> errors, IEnumerable<Synapse> synapses)
         {
             return new InputLayer(this.neurones.ToArray());
         }

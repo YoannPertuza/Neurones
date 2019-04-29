@@ -16,7 +16,10 @@ namespace NeuronesTest
             var output2 = new Sigmoid(1 * 0.5 + 2 * 0.5).value();
             var output3 = new Sigmoid(0.81 * 0.5 + 0.81 * 0.5).value();
             var o = 0.81 * (1 - 0.81) * (0.5 + 0.31 + 0.5 * (-0.69));
-		}
+
+            var output4 = new Sigmoid(0.8 * 0.5 + 0.2 * 0.5).value();
+            var output5 = new Sigmoid(0.62 * 0.5 + 0.62 * 0.5).value();
+        }
 
 		[TestMethod]
 		public void UnNeurone()
@@ -204,44 +207,38 @@ namespace NeuronesTest
            var prog =
              new LinkedLayer(
                   new InputLayer(
-                      new InputNeurone(1, 1),
-                      new InputNeurone(2, 2)
+                      new InputNeurone(1, 0.8),
+                      new InputNeurone(2, 0.2)
                   ),
                   new DeepLayer(
                       new DeepNeurone(
                           1,
                           new Synapse(1, 1, 0.5),
-                          new Synapse(2, 2, 0.5)
+                          new Synapse(2, 1, 0.6)
                       ),
                       new DeepNeurone(
                           2,
-                          new Synapse(1, 1, 0.5),
-                          new Synapse(2, 2, 0.5)
+                          new Synapse(1, 2, 0.4),
+                          new Synapse(2, 2, 0.7)
                       )
                   ),
-                  new DeepLayer(
+                  new OutputLayer(
                       new DeepNeurone(
                           1,
-                          new Synapse(1, 1, 0.5),
-                          new Synapse(2, 2, 0.5)
-                      ),
-                      new DeepNeurone(
-                          2,
-                          new Synapse(1, 1, 0.5),
-                          new Synapse(2, 2, 0.5)
+                          new Synapse(1, 1, 0.7),
+                          new Synapse(2, 1, 0.4)
                       )
                   )
               ).linkLayers().lastLayer().propagate();
 
            var errors = 
                new Network(prog, new List<Error>()
-                        {
-                            new OutputExpected(1, 1),
-                            new OutputExpected(2, 0)
-                        }).errors();
+                {
+                    new OutputExpected(1, 1),
+                }).errors();
 
-           var back = prog.backProp(errors);
-
+           var back = prog.backProp(errors, new List<Synapse>());
+        
         }
              
 
@@ -250,7 +247,7 @@ namespace NeuronesTest
         {
             var dataSets = new List<DataSet>();
 
-            for (var i = 1; i < 200; i++)
+            for (var i = 1; i < 8000; i++)
             {
                 var r = new Random();
                 var a = r.NextDouble();
@@ -263,12 +260,14 @@ namespace NeuronesTest
                         ),
                         new List<Error>()
                         {
-                            new OutputExpected(1, a > b ? 1 : 0),
+                            new OutputExpected(1, a > b ? 1 : 0)
                         }
                     )
                 );
             }
-            
+
+            var rs = new Random();
+
             var reseau =
                 new LinkedLayer(
                     new InputLayer(
@@ -278,20 +277,44 @@ namespace NeuronesTest
                     new DeepLayer(
                         new DeepNeurone(
                             1,
-                            new Synapse(1, 1, 0.5),
-                            new Synapse(2, 1, 0.6)
+                            new Synapse(1, 1, rs.NextDouble()),
+                            new Synapse(2, 1, rs.NextDouble())
                         ),
                         new DeepNeurone(
                             2,
-                            new Synapse(1, 2, 0.7),
-                            new Synapse(2, 2, 0.8)
+                            new Synapse(1, 2, rs.NextDouble()),
+                            new Synapse(2, 2, rs.NextDouble())
                         )
                     ),
                     new DeepLayer(
                         new DeepNeurone(
                             1,
-                            new Synapse(1, 1, 0.5),
-                            new Synapse(2, 1, 0.6)
+                            new Synapse(1, 1, rs.NextDouble()),
+                            new Synapse(2, 1, rs.NextDouble())
+                        ),
+                        new DeepNeurone(
+                            2,
+                            new Synapse(1, 2, rs.NextDouble()),
+                            new Synapse(2, 2, rs.NextDouble())
+                        ),
+                        new DeepNeurone(
+                            3,
+                            new Synapse(1, 3, rs.NextDouble()),
+                            new Synapse(2, 3, rs.NextDouble())
+                        ),
+                        new DeepNeurone(
+                            4,
+                            new Synapse(1, 4, rs.NextDouble()),
+                            new Synapse(2, 4, rs.NextDouble())
+                        )
+                    ),
+                    new OutputLayer(
+                        new DeepNeurone(
+                            1,
+                            new Synapse(1, 1, rs.NextDouble()),
+                            new Synapse(2, 1, rs.NextDouble()),
+                            new Synapse(3, 1, rs.NextDouble()),
+                            new Synapse(4, 1, rs.NextDouble())
                         )
                     )
                 ).linkLayers().lastLayer();
@@ -302,7 +325,7 @@ namespace NeuronesTest
             {
                 reseau = reseau.withNewSet(dataSet.inputs()).propagate();
                 errors = new Network(reseau, dataSet.outputExpected()).errors();                
-                reseau = reseau.backProp(errors);
+                reseau = reseau.backProp(errors, new List<Synapse>());
             }
 
             var check1 = reseau.withNewSet(

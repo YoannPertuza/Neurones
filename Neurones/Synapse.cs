@@ -36,18 +36,20 @@ namespace Neurones
             return this.value(errors.ToList().Find(e => e.neuroneIndex() == this.destinNeurone).asNumber());
         }
 
-        public Synapse withAdjustedWeight(Number neuroneError, Layer prev)
+        public Synapse withAdjustedWeight(IEnumerable<Error> neuroneErrors, Layer prev, Number neuroneValue)
         {
             return
                 new Synapse(
                     this.originNeurone,
                     this.destinNeurone,
-                    new Add(
+                    new Substr(
                         this.weight,
                         new Mult(
-                            new DefaultNumber(0.1),
-                            neuroneError,
-                            prev.outputValue(this.originNeurone)
+                            new Mult(neuroneErrors.ToList().Find(n => n.neuroneIndex() == this.destinNeurone).asNumber(), new DefaultNumber(-1)),
+                            neuroneValue,
+                            new Substr(1, neuroneValue),
+                            prev.outputValue(this.originNeurone),
+                            new DefaultNumber(0.1)
                         )
                     ).value()
                 );
