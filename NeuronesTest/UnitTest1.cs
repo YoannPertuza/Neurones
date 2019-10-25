@@ -161,11 +161,11 @@ namespace NeuronesTest
                         new DeepNeurone(
 							1,
 							new Synapse(1,1, 0.5),
-							new Synapse(2,2, 0.6)
+							new Synapse(2,1, 0.6)
 						),
                         new DeepNeurone(
 							2,
-							new Synapse(1,1, 0.7),
+							new Synapse(1,2, 0.7),
 							new Synapse(2,2, 0.8)
 						)
 					),
@@ -201,49 +201,140 @@ namespace NeuronesTest
 			);	
         }
 
-         [TestMethod]
-        public void TestNetworkErrorsTbk()
+		[TestMethod]
+		public void TestNetworkErrors()
+		{
+			var inputs =
+				new InputLayer(
+						new InputNeurone(1, 1),
+						new InputNeurone(2, 2)
+					);
+
+			var resultLayer =
+				new LinkedLayer(
+					inputs,
+					new DeepLayer(
+						new DeepNeurone(
+							1,
+							new Synapse(1, 1, 0.5),
+							new Synapse(2, 1, 0.6)
+						),
+						new DeepNeurone(
+							2,
+							new Synapse(1, 2, 0.7),
+							new Synapse(2, 2, 0.8)
+						)
+					),
+					new DeepLayer(
+						new DeepNeurone(
+							1,
+							new Synapse(1, 1, 0.5),
+							new Synapse(2, 1, 0.6)
+						)
+					)
+				).linkLayers().lastLayer();
+
+			resultLayer = resultLayer.propagate();
+
+			var expectedValue = 
+				new Sigmoid(
+					new Add(
+						new Mult(
+							new Sigmoid(1 * 0.5 + 2 * 0.6),
+							new DefaultNumber(0.5)
+						),
+						new Mult(
+							new Sigmoid(1 * 0.7 + 2 * 0.8),
+							new DefaultNumber(0.6)
+						)
+					)
+				).value();
+
+			Assert.AreEqual(
+				resultLayer.propagate().outputValue(1).value(),
+				expectedValue
+			);
+
+			Assert.AreEqual(
+				new Network(resultLayer, new List<Error>()
+				 {
+					new OutputExpected(1, 1),
+				 }).errors().First().asNumber().value(), 
+				1 - expectedValue
+			);
+
+		}
+
+		[TestMethod]
+        public void TestNetworkWithBackPropagation()
         {
-           var prog =
-             new LinkedLayer(
-                  new InputLayer(
-                      new InputNeurone(1, 0.8),
-                      new InputNeurone(2, 0.2)
-                  ),
-                  new DeepLayer(
-                      new DeepNeurone(
-                          1,
-                          new Synapse(1, 1, 0.5),
-                          new Synapse(2, 1, 0.6)
-                      ),
-                      new DeepNeurone(
-                          2,
-                          new Synapse(1, 2, 0.4),
-                          new Synapse(2, 2, 0.7)
-                      )
-                  ),
-                  new OutputLayer(
-                      new DeepNeurone(
-                          1,
-                          new Synapse(1, 1, 0.7),
-                          new Synapse(2, 1, 0.4)
-                      )
-                  )
-              ).linkLayers().lastLayer().propagate();
+			var inputs =
+				new InputLayer(
+						new InputNeurone(1, 1),
+						new InputNeurone(2, 2)
+					);
 
-           var errors = 
-               new Network(prog, new List<Error>()
-                {
-                    new OutputExpected(1, 1),
-                }).errors();
+			var resultLayer =
+				new LinkedLayer(
+					inputs,
+					new DeepLayer(
+						new DeepNeurone(
+							1,
+							new Synapse(1, 1, 0.5),
+							new Synapse(2, 1, 0.6)
+						),
+						new DeepNeurone(
+							2,
+							new Synapse(1, 2, 0.7),
+							new Synapse(2, 2, 0.8)
+						)
+					),
+					new OutputLayer(
+						new DeepNeurone(
+							1,
+							new Synapse(1, 1, 0.5),
+							new Synapse(2, 1, 0.6)
+						)
+					)
+				).linkLayers().lastLayer();
 
-           var back = prog.backProp(errors, new List<Synapse>());
-        
-        }
+			resultLayer = resultLayer.propagate();
+
+			var expectedValue =
+				new Sigmoid(
+					new Add(
+						new Mult(
+							new Sigmoid(1 * 0.5 + 2 * 0.6),
+							new DefaultNumber(0.5)
+						),
+						new Mult(
+							new Sigmoid(1 * 0.7 + 2 * 0.8),
+							new DefaultNumber(0.6)
+						)
+					)
+				).value();
+
+			Assert.AreEqual(
+				resultLayer.propagate().outputValue(1).value(),
+				expectedValue
+			);
+
+			var errors = new Network(resultLayer, new List<Error>()
+				 {
+					new OutputExpected(1, 1),
+				 }).errors();
+
+			Assert.AreEqual(errors.First().asNumber().value(),
+				1 - expectedValue
+			);
+
+			resultLayer.backProp(errors, new List<Synapse>());
+
+		}
              
 
         [TestMethod]
-        public void TestNetworkErrors()
+        public void TestNetworkErrorsWithMultipleFor()
         {
             var dataSets = new List<DataSet>();
 

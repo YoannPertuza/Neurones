@@ -24,7 +24,7 @@ namespace Neurones
             return targetNeurone == this.index;
         }
 
-        public IEnumerable<Synapse> synapsesFrom()
+		public IEnumerable<Synapse> synapsesFrom()
         {
             throw new Exception("INPUT NEURONE DOES NOT HAVE INPUT SYNAPSE");
         }

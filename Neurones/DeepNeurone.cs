@@ -49,18 +49,31 @@ namespace Neurones
             return targetNeurone == this.index;
         }
 
-        public Error error(IEnumerable<Error> nextErrors, IEnumerable<Synapse> synapses)
+        public Error error(IEnumerable<Error> errors, IEnumerable<Synapse> synapses)
         {
-            return
-                new ExitError(
-                    this.index,
-                    new Add(                      
-                        synapses
-                        .Where(s => s.isFromNeurone(this.index))
-                        .Select(s => s.error(nextErrors)).ToArray()                        
-                    )
-                );               
-        }
+			var syn = synapses.Where(s => s.isFromNeurone(this.index));
+
+			var concernedErrors = errors.Where(es => syn.Any(s => s.isToNeurone(es.neuroneIndex())));
+
+			var error = new ExitError(
+					this.index, 
+					new Add(
+						concernedErrors.Select(
+							err =>
+								new Div(
+									new Mult(
+										err.asNumber(),
+										syn.FirstOrDefault(s => s.isToNeurone(err.neuroneIndex()) && s.isFromNeurone(this.index)).weight
+									),
+									new Add(
+										synapses.Where(s => s.isToNeurone(err.neuroneIndex())).Select(sv => sv.weight).ToArray()
+									)
+								)
+						).ToArray()
+					));
+
+			return error;
+		}
 
         public Neurone withValue(Layer prevLayer)
         {
