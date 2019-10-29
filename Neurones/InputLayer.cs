@@ -24,14 +24,11 @@ namespace Neurones
             throw new Exception("CANNOT LINKED LAYER ON INPUT LAYER");
         }
 
-        public IEnumerable<Error> errors(IEnumerable<Error> nextLayerErrors, IEnumerable<Synapse> synapses)
-        {
-            return new List<Error>();
-        }
-
         public Layer backProp(IEnumerable<Error> errors, IEnumerable<Synapse> synapses)
         {
-            return new InputLayer(this.neurones.ToArray());
+			return new InputLayer(				
+					this.neurones.ToArray()
+				);
         }
 
         public Layer propagate()
@@ -44,6 +41,12 @@ namespace Neurones
             return inputLayer;
         }
 
+		public Layer applyCorrections()
+		{
+			return new InputLayer(
+				this.neurones.ToArray()
+			);
+		}
 	}
 
 }

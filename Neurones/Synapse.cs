@@ -37,21 +37,19 @@ namespace Neurones
             return new DefaultNumber(this.value(prevLayer.outputValue(this.originNeurone)).value());
 		}
 
-        public Synapse withAdjustedWeight(IEnumerable<Error> neuroneErrors, Layer prev, Number neuroneValue)
+        public Synapse withAdjustedWeight(Error neuroneError, Layer prev)
         {
             return
                 new Synapse(
                     this.originNeurone,
                     this.destinNeurone,
-                    new Substr(
+                    new Add(
                         this.weight,
                         new Mult(
-                            new Mult(neuroneErrors.ToList().Find(n => n.neuroneIndex() == this.destinNeurone).asNumber(), new DefaultNumber(-1)),
-                            neuroneValue,
-                            new Substr(1, neuroneValue),
-                            prev.outputValue(this.originNeurone),
-                            new DefaultNumber(0.1)
-                        )
+							new DefaultNumber(0.1),
+							prev.outputValue(this.originNeurone),
+							neuroneError.asNumber()
+						)
                     ).value()
                 );
         }

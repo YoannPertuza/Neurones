@@ -1,20 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Neurones
 {
     public class InputNeurone : Neurone
     {
-        public InputNeurone(int index, double value)
+        public InputNeurone(int index, double value) : this(index, new DefaultNumber(value), new List<Error>())
 		{
-			this.index = index;
-            this.value = new DefaultNumber(value);
 		}
 
-        private int index;
-        private Number value;
+		
 
-        public Number outputValue(Layer prevLayer)
+		public InputNeurone(int index, Number value, IEnumerable<Error> errors)
+		{
+			this.index = index;
+			this.value = value;
+			this.errors = errors;
+		}
+
+		private int index;
+        private Number value;
+		private IEnumerable<Error> errors;
+
+		public Number outputValue(Layer prevLayer)
         {
             return value;
         }
@@ -31,13 +40,8 @@ namespace Neurones
 
         public Error error(IEnumerable<Error> nextErrors, IEnumerable<Synapse> synapses)
         {
-            throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
-        }
-
-        public Neurone withNewSynapse(IEnumerable<Error> nextErrors, Layer prev)
-        {
-            throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
-        }
+			throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
+		}
 
         public Neurone withValue(Layer layer)
         {
@@ -46,10 +50,22 @@ namespace Neurones
 
         public double val()
         {
-            throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
+			return this.value.value();
         }
 
+		public Neurone withError(IEnumerable<Error> nextErrors)
+		{
+			return new InputNeurone(
+				this.index,
+				this.value,
+				new List<Error>(this.errors) { nextErrors.FirstOrDefault(e => e.neuroneIndex() == this.index) }
+			);
+		}
 
-    }
+		public Neurone applyCorrections(Layer prevLayer)
+		{
+			throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
+		}
+	}
 
 }

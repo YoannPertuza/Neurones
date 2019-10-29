@@ -11,8 +11,12 @@ namespace Neurones
 		IEnumerable<Synapse> synapsesFrom();
 
         Error error(IEnumerable<Error> nextErrors, IEnumerable<Synapse> synapses);
-        Neurone withNewSynapse(IEnumerable<Error> nextErrors, Layer prev);
+
+		Neurone withError(IEnumerable<Error> nextErrors);
+
         Neurone withValue(Layer prevLayer);
-    }
+
+		Neurone applyCorrections(Layer prevLayer);
+	}
 
 }

@@ -328,7 +328,9 @@ namespace NeuronesTest
 				1 - expectedValue
 			);
 
-			resultLayer.backProp(errors, new List<Synapse>());
+			var backprogResult = resultLayer.backProp(errors, new List<Synapse>());
+
+			backprogResult.applyCorrections();
 
 		}
              

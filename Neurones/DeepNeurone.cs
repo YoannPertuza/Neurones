@@ -6,23 +6,26 @@ namespace Neurones
     public class DeepNeurone : Neurone
     {
 
-        public DeepNeurone(int index, params Synapse[] synapses)
+        public DeepNeurone(int index, params Synapse[] synapses) : this(index, new NullNumber(), new List<Error>(), synapses)
 		{
-			this.index = index;
-			this.synapses = synapses;
-            this.value = new NullNumber();
 		}
 
-        public DeepNeurone(int index, Number value, params Synapse[] synapses)
+		public DeepNeurone(int index, Number value, params Synapse[] synapses) : this(index, value, new List<Error>(), synapses)
+		{
+		}
+
+		public DeepNeurone(int index, Number value, IEnumerable<Error> errors, params Synapse[] synapses)
         {
             this.index = index;
             this.synapses = synapses;
             this.value = value;
+			this.errors = errors;
         }
 
 		private int index;
 		private IEnumerable<Synapse> synapses;
         private Number value;
+		private IEnumerable<Error> errors;
 
         public IEnumerable<Synapse> synapsesFrom()
         {
@@ -56,22 +59,22 @@ namespace Neurones
 			var concernedErrors = errors.Where(es => syn.Any(s => s.isToNeurone(es.neuroneIndex())));
 
 			var error = new ExitError(
-					this.index, 
-					new Add(
-						concernedErrors.Select(
+				this.index,
+				new Mult(
+						new DefaultNumber(this.val()),
+						new Substr(1, this.val()),
+						new Add(
+							concernedErrors.Select(
 							err =>
-								new Div(
-									new Mult(
-										err.asNumber(),
-										syn.FirstOrDefault(s => s.isToNeurone(err.neuroneIndex()) && s.isFromNeurone(this.index)).weight
-									),
-									new Add(
-										synapses.Where(s => s.isToNeurone(err.neuroneIndex())).Select(sv => sv.weight).ToArray()
-									)
-								)
-						).ToArray()
-					));
-
+							new Mult(
+								err.asNumber(),
+								syn.FirstOrDefault(s => s.isToNeurone(err.neuroneIndex()) && s.isFromNeurone(this.index)).weight
+							)
+							).ToArray()
+						)
+					)
+				);
+				
 			return error;
 		}
 
@@ -80,15 +83,26 @@ namespace Neurones
             return new DeepNeurone(this.index, this.outputValue(prevLayer), this.synapses.ToArray());
         }
 
-        public Neurone withNewSynapse(IEnumerable<Error> nextErrors, Layer prev)
-        {   
-            return
-                new DeepNeurone(
-                    this.index,
-                    this.synapses.Select(s => s.withAdjustedWeight(nextErrors, prev, this.value)).ToArray()
-                );
-                    
-        }
+        
+		public Neurone withError(IEnumerable<Error> nextErrors)
+		{
+			return new DeepNeurone(
+				this.index, 
+				this.value, 
+				new List<Error>(this.errors) { nextErrors.FirstOrDefault(e => e.neuroneIndex() == this.index) }, 
+				this.synapses.ToArray()
+			);
+		}
+
+		public Neurone applyCorrections(Layer prevLayer)
+		{
+			return new DeepNeurone(
+				this.index,
+				this.value,
+				this.errors,
+				this.synapses.Select(s => s.withAdjustedWeight(this.errors.Last(), prevLayer)).ToArray()
+			);
+		}
 	}
 
 }

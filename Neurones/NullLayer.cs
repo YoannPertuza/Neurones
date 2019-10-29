@@ -19,10 +19,7 @@ namespace Neurones
             throw new Exception("CANNOT LINK NULL LAYER");
         }
 
-        public IEnumerable<Error> errors(IEnumerable<Error> nextLayerErrors, IEnumerable<Synapse> synapses)
-        {
-            throw new Exception("CANNOT LINK NULL LAYER");
-        }
+       
 
         public Layer backProp(IEnumerable<Error> errors)
         {
@@ -43,6 +40,11 @@ namespace Neurones
         {
             throw new NotImplementedException();
         }
-    }
+
+		public Layer applyCorrections()
+		{
+			throw new NotImplementedException();
+		}
+	}
 
 }

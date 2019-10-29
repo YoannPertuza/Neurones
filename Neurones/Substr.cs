@@ -2,7 +2,12 @@
 {
     public class Substr : Number
     {
-        public Substr(Number number1, double number2) : this(number1, new DefaultNumber(number2))
+
+		public Substr(double number1, double number2) : this(new DefaultNumber(number1), new DefaultNumber(number2))
+		{
+		}
+
+		public Substr(Number number1, double number2) : this(number1, new DefaultNumber(number2))
         {
         }
 
