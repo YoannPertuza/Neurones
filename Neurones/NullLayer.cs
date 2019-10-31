@@ -9,17 +9,10 @@ namespace Neurones
             throw new Exception("YOU HAVE TO LINK YOUR LAYERS");
         }
 
-        public Layer withPrevLayer(Layer layer)
+        public Layer withPrevLayer(Layer layer, int index)
         {
             throw new Exception("CANNOT LINK NULL LAYER");
         }
-
-        public Layer withNextLayer(Layer layer)
-        {
-            throw new Exception("CANNOT LINK NULL LAYER");
-        }
-
-       
 
         public Layer backProp(IEnumerable<Error> errors)
         {
@@ -42,6 +35,16 @@ namespace Neurones
         }
 
 		public Layer applyCorrections()
+		{
+			throw new NotImplementedException();
+		}
+
+		public int index()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Neurone neuroneInLayer(int indexLayer, int indexNeurone)
 		{
 			throw new NotImplementedException();
 		}

@@ -10,8 +10,7 @@ namespace Neurones
 		{
 		}
 
-		
-
+	
 		public InputNeurone(int index, Number value, IEnumerable<Error> errors)
 		{
 			this.index = index;
@@ -53,7 +52,7 @@ namespace Neurones
 			return this.value.value();
         }
 
-		public Neurone withError(IEnumerable<Error> nextErrors)
+		public Neurone withError(IEnumerable<Error> nextErrors, Layer prevLayer)
 		{
 			return new InputNeurone(
 				this.index,
@@ -65,6 +64,16 @@ namespace Neurones
 		public Neurone applyCorrections(Layer prevLayer)
 		{
 			throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
+		}
+
+		public Synapse synapseFrom(int indexPreviousNeurone)
+		{
+			throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
+		}
+
+		public Error lastError()
+		{
+			throw new NotImplementedException();
 		}
 	}
 

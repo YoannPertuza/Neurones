@@ -5,16 +5,23 @@ namespace Neurones
 {
 	public class OutputLayer : Layer
     {
-        public OutputLayer(params Neurone[] neurones) : this(new NullLayer(), neurones)
+        public OutputLayer(params Neurone[] neurones) : this(0, new NullLayer(), neurones)
         {
         }
 
-        public OutputLayer(Layer prevLayer, params Neurone[] neurones)
+        public OutputLayer(Layer prevLayer, params Neurone[] neurones) : this(0, prevLayer, neurones)
         {
-            this.prevLayer = prevLayer;
-            this.neurones = neurones;
         }
 
+		public OutputLayer(int indexLayer, Layer prevLayer, params Neurone[] neurones)
+		{
+			this.indexLayer = indexLayer;
+			this.prevLayer = prevLayer;
+			this.neurones = neurones;
+		}
+
+
+		private int indexLayer;
         private IEnumerable<Neurone> neurones;
         private Layer prevLayer;
 
@@ -23,15 +30,16 @@ namespace Neurones
             return neurones.ToList().Find(n => n.find(originNeurone)).outputValue(this.prevLayer);
         }
 
-        public Layer withPrevLayer(Layer layer)
+        public Layer withPrevLayer(Layer layer, int index)
         {
-            return new OutputLayer(layer, this.neurones.ToArray());
+            return new OutputLayer(index, layer, this.neurones.ToArray());
         }
 
         public Layer propagate()
         {
             return
                 new OutputLayer(
+					this.indexLayer,
                     prevLayer.propagate(),
                     this.neurones.Select(n => n.withValue(this.prevLayer)).ToArray()
                 );
@@ -41,22 +49,45 @@ namespace Neurones
         {
             return
                 new OutputLayer(
+					this.indexLayer,
                     prevLayer.backProp(errors, this.neurones.SelectMany(n => n.synapsesFrom())),
-                    this.neurones.Select(n => n.withError(errors)).ToArray()
+                    this.neurones.Select(n => n.withError(errors, this.prevLayer)).ToArray()
                 );
         }
 
         public Layer withNewSet(Layer inputLayer)
         {
-            return new OutputLayer(this.prevLayer.withNewSet(inputLayer), this.neurones.ToArray());
+            return new OutputLayer(
+				this.indexLayer,
+				this.prevLayer.withNewSet(inputLayer), 
+				this.neurones.ToArray()
+			);
         }
 
 		public Layer applyCorrections()
 		{
 			return new OutputLayer(
+				this.indexLayer,
 				prevLayer.applyCorrections(),
 				this.neurones.Select(n => n.applyCorrections(this.prevLayer)).ToArray()
 			);
+		}
+
+		public int index()
+		{
+			return this.indexLayer;
+		}
+
+		public Neurone neuroneInLayer(int indexLayer, int indexNeurone)
+		{
+			if (this.indexLayer == indexLayer)
+			{
+				return neurones.ToList().Find(n => n.find(indexNeurone));
+			}
+			else
+			{
+				return this.prevLayer.neuroneInLayer(indexLayer, indexNeurone);
+			}
 		}
 	}
 

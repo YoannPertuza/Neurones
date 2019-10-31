@@ -1,21 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Neurones
 {
     public class Synapse
 	{
-        public Synapse(int originNeurone, int destinNeurone, double weight)
+        public Synapse(int originNeurone, int destinNeurone, double weight) : this(originNeurone, destinNeurone, weight, new List<Number>())
 		{
-            this.originNeurone = originNeurone;
-            this.destinNeurone = destinNeurone;
-			this.weight = new DefaultNumber(weight);
+
 		}
 
-        private int originNeurone;
+		public Synapse(int originNeurone, int destinNeurone, double weight, List<Number> gradientErrors)
+		{
+			this.originNeurone = originNeurone;
+			this.destinNeurone = destinNeurone;
+			this.weight = new DefaultNumber(weight);
+			this.gradientErrors = gradientErrors;
+
+		}
+
+		private int originNeurone;
         private int destinNeurone;
 		public Number weight;
-
+		public List<Number> gradientErrors;
 
 		public bool isFromNeurone(int neuroneIndex)
 		{
@@ -39,20 +47,30 @@ namespace Neurones
 
         public Synapse withAdjustedWeight(Error neuroneError, Layer prev)
         {
-            return
-                new Synapse(
-                    this.originNeurone,
-                    this.destinNeurone,
-                    new Add(
-                        this.weight,
-                        new Mult(
-							new DefaultNumber(0.1),
-							prev.outputValue(this.originNeurone),
-							neuroneError.asNumber()
+			return new Synapse(
+					this.originNeurone,
+					this.destinNeurone,
+					new Substr(
+						this.weight,
+						new Mult(
+							new DefaultNumber(0.5),
+							this.gradientErrors.Last()
 						)
-                    ).value()
-                );
+					).value()				
+				); 
         }
+
+		public Synapse withError(Number error, Layer prevLayer)
+		{
+			return new Synapse(
+					this.originNeurone,
+					this.destinNeurone,
+					this.weight.value(),
+					new List<Number>(this.gradientErrors) {
+						new Mult(error, prevLayer.outputValue(this.originNeurone)) 
+					}
+				);
+		}
 	}
 
 }

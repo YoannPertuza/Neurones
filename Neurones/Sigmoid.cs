@@ -19,5 +19,4 @@ namespace Neurones
 			return 1 / (1 + Math.Exp(-toSigmoid.value()));
 		}
 	}
-
 }
