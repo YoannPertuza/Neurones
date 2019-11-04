@@ -24,6 +24,11 @@
         {
             return this.index;
         }
-    }
+
+		public Number derive()
+		{
+			throw new System.NotImplementedException();
+		}
+	}
 
 }

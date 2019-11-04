@@ -14,7 +14,7 @@ namespace Neurones
 
         private IEnumerable<Neurone> neurones;
 
-		public Number outputValue(int originNeurone)
+		public Number neuroneValue(int originNeurone)
 		{
             return neurones.ToList().Find(n => n.find(originNeurone)).outputValue(new NullLayer());
 		}
@@ -24,7 +24,7 @@ namespace Neurones
             throw new Exception("CANNOT LINKED LAYER ON INPUT LAYER");
         }
 
-        public Layer backProp(IEnumerable<Error> errors, IEnumerable<Synapse> synapses)
+        public Layer backProp(IEnumerable<Error> errors)
         {
 			return new InputLayer(
 					this.neurones.ToArray()

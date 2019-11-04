@@ -37,11 +37,6 @@ namespace Neurones
             throw new Exception("INPUT NEURONE DOES NOT HAVE INPUT SYNAPSE");
         }
 
-        public Error error(IEnumerable<Error> nextErrors, IEnumerable<Synapse> synapses)
-        {
-			throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
-		}
-
         public Neurone withValue(Layer layer)
         {
             throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");

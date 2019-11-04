@@ -4,12 +4,10 @@ namespace Neurones
 {
     public interface Layer
 	{
-		Number outputValue(int targetNeurone);
+		Number neuroneValue(int targetNeurone);
         
         Layer propagate();
-        Layer backProp(IEnumerable<Error> errors, IEnumerable<Synapse> synapses);
-
-		Layer applyCorrections();
+        Layer backProp(IEnumerable<Error> errors);
 
         Layer withNewSet(Layer inputLayer);
 

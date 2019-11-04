@@ -19,7 +19,8 @@ namespace Neurones
             return this.expectedOutput.Select(o => 
                 new ExitError(
                     o.neuroneIndex(),
-                    new Substr(o.asNumber(), lastLayer.outputValue(o.neuroneIndex()))
+					lastLayer.neuroneValue(o.neuroneIndex()), 
+					o.asNumber()
                 )
             );
         }

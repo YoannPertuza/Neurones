@@ -3,7 +3,8 @@
     public interface Error
     {
         Number asNumber();
-        int neuroneIndex();
+		Number derive();
+		int neuroneIndex();
     }
 
 }

@@ -24,7 +24,7 @@ namespace Neurones
 		private IEnumerable<Neurone> neurones;
 		private Layer prevLayer;
 
-		public Number outputValue(int originNeurone)
+		public Number neuroneValue(int originNeurone)
 		{
             return neurones.ToList().Find(n => n.find(originNeurone)).outputValue(this.prevLayer);				
 		}
@@ -44,13 +44,13 @@ namespace Neurones
                 );
         }
 
-        public Layer backProp(IEnumerable<Error> errors, IEnumerable<Synapse> synapses)
+        public Layer backProp(IEnumerable<Error> errors)
         {            
 			return
 				new DeepLayer(
 					this.indexLayer,
-					prevLayer.backProp(errors, this.neurones.SelectMany(n => n.synapsesFrom())),
-					this.neurones.Select(n => n.withError(errors, prevLayer)).ToArray()
+					prevLayer.backProp(errors),
+					this.neurones.Select(n => n.withError(errors,  prevLayer)).ToArray()
 				);
 		}
 
@@ -62,15 +62,6 @@ namespace Neurones
 				this.neurones.ToArray()
 				);
         }
-
-		public Layer applyCorrections()
-		{
-			return new DeepLayer(
-				this.indexLayer,
-				prevLayer.applyCorrections(),
-				this.neurones.Select(n => n.applyCorrections(this.prevLayer)).ToArray()
-			);
-		}
 
 		public int index()
 		{

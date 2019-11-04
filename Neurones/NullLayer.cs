@@ -5,7 +5,7 @@ namespace Neurones
 {
     public class NullLayer : Layer 
     {
-        public Number outputValue(int targetNeurone) {
+        public Number neuroneValue(int targetNeurone) {
             throw new Exception("YOU HAVE TO LINK YOUR LAYERS");
         }
 

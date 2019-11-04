@@ -33,7 +33,7 @@ namespace NeuronesTest
 						1,
 						new Synapse(1,1, 0.5)
 					)
-				).outputValue(1).value(),
+				).neuroneValue(1).value(),
 				new Sigmoid(0.5 * 0.5).value()
 			);
 		}
@@ -50,7 +50,7 @@ namespace NeuronesTest
                         1,
                         new Synapse(1, 1, 0.5)
                     )
-                ).propagate().outputValue(1).value(),
+                ).propagate().neuroneValue(1).value(),
                 new Sigmoid(0.5 * 0.5).value()
             );
         }
@@ -80,11 +80,11 @@ namespace NeuronesTest
 				);
 
 			Assert.AreEqual(
-				resultLayer.propagate().outputValue(1).value(),
+				resultLayer.propagate().neuroneValue(1).value(),
 				new Sigmoid(1 * 0.5 + 2 * 0.5).value()
 			);
 			Assert.AreEqual(
-                resultLayer.propagate().outputValue(2).value(),
+                resultLayer.propagate().neuroneValue(2).value(),
 				new Sigmoid(1 * 0.5 + 2 * 0.5).value()
 			);
 		}
@@ -129,7 +129,7 @@ namespace NeuronesTest
 				);
 
 			Assert.AreEqual(
-                resultLayer.withNewSet(inputs).propagate().outputValue(1).value(),
+                resultLayer.withNewSet(inputs).propagate().neuroneValue(1).value(),
 				new Sigmoid(
 					new Add(				
 						new Mult(
@@ -185,7 +185,7 @@ namespace NeuronesTest
 
             resultLayer = resultLayer.propagate();
             Assert.AreEqual(
-				resultLayer.propagate().outputValue(1).value(),
+				resultLayer.propagate().neuroneValue(1).value(),
 				new Sigmoid(
 					new Add(				
 						new Mult(
@@ -251,7 +251,7 @@ namespace NeuronesTest
 				).value();
 
 			Assert.AreEqual(
-				resultLayer.propagate().outputValue(1).value(),
+				resultLayer.propagate().neuroneValue(1).value(),
 				expectedValue
 			);
 
@@ -315,7 +315,7 @@ namespace NeuronesTest
 				).value();
 
 			Assert.AreEqual(
-				resultLayer.propagate().outputValue(1).value(),
+				resultLayer.propagate().neuroneValue(1).value(),
 				expectedValue
 			);
 
@@ -336,101 +336,53 @@ namespace NeuronesTest
         {
 		// https://hmkcode.com/ai/backpropagation-step-by-step/
 		//https://github.com/hmkcode/netflow.js
-			var dataSets = new List<DataSet>();
-
-			double a;
-			double b;
-			var r = new Random();
-
-
-			for (var i = 1; i < 10000; i++)
-			{
-				
-				a = r.NextDouble(); 
-				b = r.NextDouble();
-
-				dataSets.Add(
-					new DataSet(
-						new InputLayer(
-							new InputNeurone(1, a),
-							new InputNeurone(2, b)
-						),
-						new List<Error>()
-						{
-							new OutputExpected(1, (a > b) ? 1 : 0)
-						}
-					)
-				);
-			}
-
-
-
+			
 
 
 			var reseau =
                 new LinkedLayer(
                     new InputLayer(
-                        new InputNeurone(1, 0),
-                        new InputNeurone(2, 0)
+                        new InputNeurone(1, 0.05),
+                        new InputNeurone(2, 0.10)
                     ),
 				   new DeepLayer(
 						new DeepNeurone(
 							1,
-							new Synapse(1, 1, r.NextDouble()),
-							new Synapse(2, 1, r.NextDouble())
+							0.35,
+							new Synapse(1, 1, 0.15),
+							new Synapse(2, 1, 0.20)
 						),
 						new DeepNeurone(
 							2,
-							new Synapse(1, 2, r.NextDouble()),
-							new Synapse(2, 2, r.NextDouble())
+							0.35,
+							new Synapse(1, 2, 0.25),
+							new Synapse(2, 2, 0.30)
 						)						
 					),
-				   new DeepLayer(
-						new DeepNeurone(
-							1,
-							new Synapse(1, 1, r.NextDouble()),
-							new Synapse(2, 1, r.NextDouble())
-						),
-						new DeepNeurone(
-							2,
-							new Synapse(1, 2, r.NextDouble()),
-							new Synapse(2, 2, r.NextDouble())
-						)
-					),
-					new OutputLayer(
+				   new OutputLayer(
 						new OutputNeurone(
 							1,
-							new Synapse(1, 1, r.NextDouble()),
-							new Synapse(2, 1, r.NextDouble())
+							0.6,
+							new Synapse(1, 1, 0.40),
+							new Synapse(2, 1, 0.45)
+						),
+						new OutputNeurone(
+							2,
+							0.6,
+							new Synapse(1, 2, 0.50),
+							new Synapse(2, 2, 0.55)
 						)
-					)				
+					)
+									
 				).linkLayers().lastLayer();
 
-			IEnumerable<Error> errors = null;
 
-            foreach (var dataSet in dataSets)
-            {
-				var inputs = dataSet.inputs();
+			reseau = reseau.propagate();
 
-				reseau = reseau.withNewSet(dataSet.inputs()).propagate();
-                errors = new Network(reseau, dataSet.outputExpected()).errors();
-				
-                reseau = reseau.backProp(errors, new List<Synapse>());
+			var nt = new Network(reseau, new List<Error>() { new OutputExpected(1, 0.01), new OutputExpected(2, 0.99) });
 
-				Console.WriteLine($"a:{inputs.outputValue(1).value()} ; b:{inputs.outputValue(2).value()} ; result:{reseau.outputValue(1).value()} ; err:{errors.First().asNumber().value()}");
+			reseau = reseau.backProp(nt.errors());
 
-
-				reseau = reseau.applyCorrections();			
-			}
-
-			var prog = reseau.withNewSet(
-				new InputLayer(
-						new InputNeurone(1, 0.2),
-						new InputNeurone(2, 0.8)
-					)).propagate();
-
-
-			var checkProg1 = prog.outputValue(1).value();
 		}
 	}
 

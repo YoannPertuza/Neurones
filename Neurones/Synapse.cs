@@ -42,32 +42,27 @@ namespace Neurones
 
 		public Number value(Layer prevLayer)
 		{
-            return new DefaultNumber(this.value(prevLayer.outputValue(this.originNeurone)).value());
+            return new DefaultNumber(this.value(prevLayer.neuroneValue(this.originNeurone)).value());
 		}
 
-        public Synapse withAdjustedWeight(Error neuroneError, Layer prev)
-        {
-			return new Synapse(
-					this.originNeurone,
-					this.destinNeurone,
-					new Substr(
-						this.weight,
-						new Mult(
-							new DefaultNumber(0.5),
-							this.gradientErrors.Last()
-						)
-					).value()				
-				); 
-        }
-
+        
 		public Synapse withError(Number error, Layer prevLayer)
 		{
 			return new Synapse(
 					this.originNeurone,
 					this.destinNeurone,
-					this.weight.value(),
+					new Substr(
+						this.weight, 
+						new Mult(
+							new DefaultNumber(0.5),
+							new Mult(
+								error,
+								prevLayer.neuroneValue(this.originNeurone)
+							)
+						)
+					).value(),
 					new List<Number>(this.gradientErrors) {
-						new Mult(error, prevLayer.outputValue(this.originNeurone)) 
+						new Mult(error, prevLayer.neuroneValue(this.originNeurone)) 
 					}
 				);
 		}
