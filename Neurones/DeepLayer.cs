@@ -5,24 +5,30 @@ namespace Neurones
 {
 	public class DeepLayer : Layer
 	{
-        public DeepLayer(params Neurone[] neurones) : this(new NullLayer(), neurones)
+        public DeepLayer(params Neurone[] neurones) : this(new NullLayer(), new NullLayer(), neurones)
 		{
 		}
 
-		public DeepLayer(Layer prevLayer, params Neurone[] neurones) : this(0, prevLayer, neurones)
+		public DeepLayer(Layer prevLayer, params Neurone[] neurones) : this(0, prevLayer, new NullLayer(), neurones)
 		{
 		}
 
-		public DeepLayer(int indexLayer, Layer prevLayer, params Neurone[] neurones)
+		public DeepLayer(Layer prevLayer, Layer nextLayer, params Neurone[] neurones) : this(0, prevLayer, nextLayer, neurones)
+		{
+		}
+
+		public DeepLayer(int indexLayer, Layer prevLayer, Layer nextLayer, params Neurone[] neurones)
 		{
 			this.indexLayer = indexLayer;
 			this.prevLayer = prevLayer;
+			this.prevLayer = nextLayer;
 			this.neurones = neurones;
 		}
 
 		private int indexLayer;
 		private IEnumerable<Neurone> neurones;
 		private Layer prevLayer;
+		private Layer nextLayer;
 
 		public Number neuroneValue(int originNeurone)
 		{
@@ -31,7 +37,7 @@ namespace Neurones
 
         public Layer withPrevLayer(Layer layer, int index)
         {
-            return new DeepLayer(index, layer, this.neurones.ToArray());
+            return new DeepLayer(index, layer, new NullLayer(), this.neurones.ToArray());
         }
 
         public Layer propagate()
@@ -39,8 +45,9 @@ namespace Neurones
             return 
                 new DeepLayer(
 					this.indexLayer,
-					prevLayer.propagate(), 
-                    this.neurones.Select(n => n.withValue(this.prevLayer)).ToArray()
+					prevLayer.propagate(),
+					new NullLayer(),
+					this.neurones.Select(n => n.withValue(this.prevLayer)).ToArray()
                 );
         }
 
@@ -50,6 +57,7 @@ namespace Neurones
 				new DeepLayer(
 					this.indexLayer,
 					prevLayer.backProp(errors),
+					new NullLayer(),
 					this.neurones.Select(n => n.withError(errors,  prevLayer)).ToArray()
 				);
 		}
@@ -58,7 +66,8 @@ namespace Neurones
         {
             return new DeepLayer(
 				this.indexLayer, 
-				this.prevLayer.withNewSet(inputLayer), 
+				this.prevLayer.withNewSet(inputLayer),
+				new NullLayer(),
 				this.neurones.ToArray()
 				);
         }

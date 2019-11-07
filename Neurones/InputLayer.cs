@@ -6,13 +6,19 @@ namespace Neurones
 {
     public class InputLayer : Layer
 	{
-        public InputLayer(params Neurone[] neurones)
+		public InputLayer(params Neurone[] neurones) : this(new NullLayer(), neurones)
+		{
+		}
+
+		public InputLayer(Layer nextLayer, params Neurone[] neurones)
 		{
             this.neurones = neurones;
+			this.nextLayer = nextLayer;
 		}
 
 
         private IEnumerable<Neurone> neurones;
+		private Layer nextLayer;
 
 		public Number neuroneValue(int originNeurone)
 		{
