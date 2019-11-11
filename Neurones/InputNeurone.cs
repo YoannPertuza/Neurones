@@ -76,17 +76,6 @@ namespace Neurones
 			throw new NotImplementedException();
 		}
 
-		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer)
-		{
-			throw new NotImplementedException();
-		}
-
-
-		public Number deriveRespectToIn()
-		{
-			throw new NotImplementedException();
-		}
-
 		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
 			throw new NotImplementedException();

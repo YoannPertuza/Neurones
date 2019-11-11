@@ -36,7 +36,7 @@ namespace Neurones
             return new OutputLayer(index, layer, this.neurones.ToArray());
         }
 
-		public Layer withNextLayer(Layer layer, int index)
+		public Layer withNextLayer(Layer layer)
 		{
 			throw new Exception("CANNOT LINKED LAYER ON NEXT LAYER");
 		}

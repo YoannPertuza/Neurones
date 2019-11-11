@@ -382,10 +382,21 @@ namespace NeuronesTest
 
 			var nt = new Network(reseau, new List<Error>() { new OutputExpected(1, 0.01), new OutputExpected(2, 0.99) });
 
-			var t = new LinkNextLayer(reseau.layerList().Reverse().ToArray()).linkedLayers().firstLayer();
+			var revertedNt = new LinkNextLayer(reseau.layerList().Reverse().ToArray()).linkedLayers().firstLayer();
 
-			reseau = t.backProp(nt.errors());
+			var reseauBp = revertedNt.backProp(nt.errors());
 
+			Assert.IsTrue(reseauBp.neuroneInLayer(1, 1).synapseFrom(1).IsWeightEqualsTo(0.14978071613276281));
+			Assert.IsTrue(reseauBp.neuroneInLayer(1, 1).synapseFrom(2).IsWeightEqualsTo(0.19956143226552567));
+
+			Assert.IsTrue(reseauBp.neuroneInLayer(1, 2).synapseFrom(1).IsWeightEqualsTo(0.24975114363236958));
+			Assert.IsTrue(reseauBp.neuroneInLayer(1, 2).synapseFrom(2).IsWeightEqualsTo(0.29950228726473915));
+
+			Assert.IsTrue(reseauBp.neuroneInLayer(2, 1).synapseFrom(1).IsWeightEqualsTo(0.35891647971788465));
+			Assert.IsTrue(reseauBp.neuroneInLayer(2, 1).synapseFrom(2).IsWeightEqualsTo(0.4086661860762334));
+
+			Assert.IsTrue(reseauBp.neuroneInLayer(2, 2).synapseFrom(1).IsWeightEqualsTo(0.5113012702387375));
+			Assert.IsTrue(reseauBp.neuroneInLayer(2, 2).synapseFrom(2).IsWeightEqualsTo(0.56137012110798912));
 		}
 	}
 

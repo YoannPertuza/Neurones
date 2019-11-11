@@ -15,7 +15,7 @@ namespace Neurones
 
 		Layer withPrevLayer(Layer layer, int index);
 
-		Layer withNextLayer(Layer layer, int index);
+		Layer withNextLayer(Layer layer);
 
 		IEnumerable<Layer> layerList();
 

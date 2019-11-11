@@ -22,7 +22,7 @@ namespace Neurones
 
 		private int originNeurone;
         private int destinNeurone;
-		public Number weight;
+		private Number weight;
 		public List<Number> gradientErrors;
 
 		public bool isFromNeurone(int neuroneIndex)
@@ -45,6 +45,10 @@ namespace Neurones
             return new DefaultNumber(this.value(prevLayer.neuroneValue(this.originNeurone)).value());
 		}
 
+		public Number deriveWeight(Number deriveIn, Number deriveOut)
+		{
+			return new Mult(deriveIn, deriveOut, this.weight);
+		}
         
 		public Synapse withError(Number deriveToIn, Number deriveToOut, Layer prevLayer)
 		{
@@ -64,6 +68,11 @@ namespace Neurones
 					).value(),
 					null
 				);
+		}
+
+		public bool IsWeightEqualsTo(double expectedWeight)
+		{
+			return expectedWeight == this.weight.value();
 		}
 	}
 

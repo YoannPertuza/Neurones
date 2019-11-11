@@ -75,14 +75,12 @@ namespace Neurones
 				this.synapses.Select(
 					s => 
 						s.withError(
-							this.deriveRespectToIn(), 
-							this.deriveRespectToOut(errors, new NullLayer()), 
+							new Mult(this.value, new Substr(1, this.value)),
+							new Substr(this.value, errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult()), 
 							prevLayer)
 						).ToArray()
 					);
 		}
-
-
 
 		public Synapse synapseFrom(int indexPreviousNeurone)
 		{
@@ -90,24 +88,15 @@ namespace Neurones
 		}
 
 
-		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer)
-		{
-			return new Substr(this.value, errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult());
-		}
-
 		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
-			return new Mult(
-				this.deriveRespectToIn(), 
-				this.deriveRespectToOut(errors, new NullLayer()), 
-				this.synapseFrom(indexNeuroneFrom).weight
-			);
+			return this.synapseFrom(indexNeuroneFrom).deriveWeight(
+					new Mult(this.value, new Substr(1, this.value)),
+					new Substr(this.value, errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult())
+				);
 		}
 
-		public Number deriveRespectToIn()
-		{
-			return new Mult(this.value, new Substr(1, this.value));
-		}
+
 	}
 
 }

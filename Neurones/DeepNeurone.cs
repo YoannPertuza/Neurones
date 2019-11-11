@@ -85,30 +85,20 @@ namespace Neurones
 				this.synapses.Select(
 					s =>
 						s.withError(
-							this.deriveRespectToIn(),
-							this.deriveRespectToOut(errors, nextLayer),
+							new Mult(this.value, new Substr(1, this.value)),
+							nextLayer.deriveRespectToOut(errors, nextLayer, this.index),
 							prevLayer)
 						).ToArray()
 					);
 		}
 
-		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer)
-		{
-			return nextLayer.deriveRespectToOut(errors, nextLayer, this.index);		
-		}
-
-		public Number deriveRespectToIn()
-		{
-			return new Mult(this.value, new Substr(1, this.value));
-		}
-
 		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
-			return new Mult(
-				this.deriveRespectToIn(),
-				this.deriveRespectToOut(errors, nextLayer),
-				this.synapseFrom(indexNeuroneFrom).weight
-			);
+			return 
+				this.synapseFrom(indexNeuroneFrom).deriveWeight(
+					new Mult(this.value, new Substr(1, this.value)),
+					nextLayer.deriveRespectToOut(errors, nextLayer, this.index)
+				);
 		}
 	}
 

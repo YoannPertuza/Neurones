@@ -30,7 +30,7 @@ namespace Neurones
             throw new Exception("CANNOT LINKED LAYER ON INPUT LAYER");
         }
 
-		public Layer withNextLayer(Layer layer, int index)
+		public Layer withNextLayer(Layer layer)
 		{
 			return new InputLayer(layer, this.neurones.ToArray());
 		}
@@ -61,7 +61,14 @@ namespace Neurones
 
 		public Neurone neuroneInLayer(int indexLayer, int indexNeurone)
 		{
-			throw new NotImplementedException();
+			if (0 == indexLayer)
+			{
+				return neurones.ToList().Find(n => n.find(indexNeurone));
+			}
+			else
+			{
+				return this.nextLayer.neuroneInLayer(indexLayer, indexNeurone);
+			}
 		}
 
 		public IEnumerable<Layer> layerList()

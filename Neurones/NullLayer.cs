@@ -54,7 +54,7 @@ namespace Neurones
 			throw new NotImplementedException();
 		}
 
-		public Layer withNextLayer(Layer layer, int index)
+		public Layer withNextLayer(Layer layer)
 		{
 			throw new NotImplementedException();
 		}

@@ -61,7 +61,7 @@ namespace Neurones
 			if (this.layers.Any())
 			{
 				return new LinkNextLayer(
-					this.layers.First().withNextLayer(this.inputLayer, this.inputLayer.index()),
+					this.layers.First().withNextLayer(this.inputLayer),
 					this.layers.Skip(1).ToArray()
 				).linkedLayers();
 			}

@@ -40,9 +40,9 @@ namespace Neurones
             return new DeepLayer(index, layer, new NullLayer(), this.neurones.ToArray());
         }
 
-		public Layer withNextLayer(Layer layer, int index)
+		public Layer withNextLayer(Layer layer)
 		{
-			return new DeepLayer(index, this.prevLayer, layer, this.neurones.ToArray());
+			return new DeepLayer(this.indexLayer, this.prevLayer, layer, this.neurones.ToArray());
 		}
 
 		public Layer propagate()

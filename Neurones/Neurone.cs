@@ -16,10 +16,6 @@ namespace Neurones
 
 		Synapse synapseFrom(int indexPreviousNeurone);
 
-		Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer);
-
-		Number deriveRespectToIn();
-
 		Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom);
 	}
 
