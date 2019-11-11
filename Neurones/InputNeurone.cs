@@ -47,12 +47,12 @@ namespace Neurones
 			return this.value.value();
         }
 
-		public Neurone withError(IEnumerable<Error> nextErrors, Layer prevLayer)
+		public Neurone withError(IEnumerable<ExitError> nextErrors, Layer prevLayer, Layer nextLayer)
 		{
 			return new InputNeurone(
 				this.index,
 				this.value,
-				new List<Error>(this.errors) { nextErrors.FirstOrDefault(e => e.neuroneIndex() == this.index) }
+				new List<Error>() {  }
 			);
 		}
 
@@ -67,6 +67,27 @@ namespace Neurones
 		}
 
 		public Error lastError()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Neurone withError(ExitError error, Layer prevLayer)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer)
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public Number deriveRespectToIn()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
 			throw new NotImplementedException();
 		}

@@ -21,7 +21,7 @@ namespace Neurones
 		{
 			this.indexLayer = indexLayer;
 			this.prevLayer = prevLayer;
-			this.prevLayer = nextLayer;
+			this.nextLayer = nextLayer;
 			this.neurones = neurones;
 		}
 
@@ -40,7 +40,12 @@ namespace Neurones
             return new DeepLayer(index, layer, new NullLayer(), this.neurones.ToArray());
         }
 
-        public Layer propagate()
+		public Layer withNextLayer(Layer layer, int index)
+		{
+			return new DeepLayer(index, this.prevLayer, layer, this.neurones.ToArray());
+		}
+
+		public Layer propagate()
         {
             return 
                 new DeepLayer(
@@ -51,14 +56,14 @@ namespace Neurones
                 );
         }
 
-        public Layer backProp(IEnumerable<Error> errors)
+        public Layer backProp(IEnumerable<ExitError> errors)
         {            
 			return
 				new DeepLayer(
 					this.indexLayer,
-					prevLayer.backProp(errors),
+					nextLayer.backProp(errors),
 					new NullLayer(),
-					this.neurones.Select(n => n.withError(errors,  prevLayer)).ToArray()
+					this.neurones.Select(n => n.withError(errors, this.prevLayer, this.nextLayer)).ToArray()
 				);
 		}
 
@@ -86,6 +91,19 @@ namespace Neurones
 			{
 				return this.prevLayer.neuroneInLayer(indexLayer, indexNeurone);
 			}
+		}
+
+		public IEnumerable<Layer> layerList()
+		{
+			return new List<Layer>(prevLayer.layerList()) { this };
+		}
+
+		
+		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
+		{
+			return new Add(
+				this.neurones.Select(n => n.deriveRespectToWeight(errors, nextLayer, indexNeuroneFrom)).ToArray()
+			);
 		}
 	}
 

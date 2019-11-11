@@ -48,6 +48,26 @@ namespace Neurones
 		{
 			throw new NotImplementedException();
 		}
+
+		public IEnumerable<Layer> layerList()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Layer withNextLayer(Layer layer, int index)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Layer backProp(IEnumerable<ExitError> errors)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 }

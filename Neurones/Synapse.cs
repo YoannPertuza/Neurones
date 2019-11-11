@@ -46,7 +46,7 @@ namespace Neurones
 		}
 
         
-		public Synapse withError(Number error, Layer prevLayer)
+		public Synapse withError(Number deriveToIn, Number deriveToOut, Layer prevLayer)
 		{
 			return new Synapse(
 					this.originNeurone,
@@ -56,14 +56,13 @@ namespace Neurones
 						new Mult(
 							new DefaultNumber(0.5),
 							new Mult(
-								error,
+								deriveToIn,
+								deriveToOut,
 								prevLayer.neuroneValue(this.originNeurone)
 							)
 						)
 					).value(),
-					new List<Number>(this.gradientErrors) {
-						new Mult(error, prevLayer.neuroneValue(this.originNeurone)) 
-					}
+					null
 				);
 		}
 	}

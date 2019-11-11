@@ -10,13 +10,17 @@ namespace Neurones
 
 		IEnumerable<Synapse> synapsesFrom();
 
-		Neurone withError(IEnumerable<Error> nextErrors, Layer prevLayer);
+		Neurone withError(IEnumerable<ExitError> errors, Layer prevLayer, Layer nextLayer);
 
 		Neurone withValue(Layer prevLayer);
 
 		Synapse synapseFrom(int indexPreviousNeurone);
 
-		Error lastError();
+		Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer);
+
+		Number deriveRespectToIn();
+
+		Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom);
 	}
 
 }

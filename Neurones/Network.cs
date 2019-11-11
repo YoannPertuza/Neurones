@@ -14,12 +14,11 @@ namespace Neurones
         private Layer lastLayer;
         private IEnumerable<Error> expectedOutput;
 
-        public IEnumerable<Error> errors()
+        public IEnumerable<ExitError> errors()
         {
             return this.expectedOutput.Select(o => 
                 new ExitError(
                     o.neuroneIndex(),
-					lastLayer.neuroneValue(o.neuroneIndex()), 
 					o.asNumber()
                 )
             );

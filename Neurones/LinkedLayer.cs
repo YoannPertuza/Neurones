@@ -23,20 +23,58 @@ namespace Neurones
             return this.inputLayer;
         }
 
-        public LinkedLayer linkLayers()
+        public LinkedLayer linkWithPrevLayers()
         {       
             if (this.layers.Any())
             {
                 return new LinkedLayer(
                     this.layers.First().withPrevLayer(this.inputLayer, this.inputLayer.index() + 1), 
                     this.layers.Skip(1).ToArray()
-                ).linkLayers();
+                ).linkWithPrevLayers();
             }
             else
             {
                 return new LinkedLayer(this.inputLayer);
             }            
         }
-    }
+
+		
+	}
+
+	public class LinkNextLayer
+	{
+		public LinkNextLayer(Layer inputLayer, params Layer[] layers)
+		{
+			this.inputLayer = inputLayer;
+			this.layers = layers;
+		}
+
+		public LinkNextLayer(params Layer[] layers) : this(layers.First(), layers.Skip(1).ToArray())
+		{
+		}
+
+		private Layer inputLayer;
+		private IEnumerable<Layer> layers;
+
+		public LinkNextLayer linkedLayers()
+		{
+			if (this.layers.Any())
+			{
+				return new LinkNextLayer(
+					this.layers.First().withNextLayer(this.inputLayer, this.inputLayer.index()),
+					this.layers.Skip(1).ToArray()
+				).linkedLayers();
+			}
+			else
+			{
+				return new LinkNextLayer(this.inputLayer);
+			}
+		}
+
+		public Layer firstLayer()
+		{
+			return this.inputLayer;
+		}
+	}
 
 }

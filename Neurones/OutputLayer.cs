@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Neurones
@@ -35,7 +36,12 @@ namespace Neurones
             return new OutputLayer(index, layer, this.neurones.ToArray());
         }
 
-        public Layer propagate()
+		public Layer withNextLayer(Layer layer, int index)
+		{
+			throw new Exception("CANNOT LINKED LAYER ON NEXT LAYER");
+		}
+
+		public Layer propagate()
         {
             return
                 new OutputLayer(
@@ -45,15 +51,17 @@ namespace Neurones
                 );
         }
 
-        public Layer backProp(IEnumerable<Error> errors)
+        public Layer backProp(IEnumerable<ExitError> errors)
         {
             return
-                new OutputLayer(
+				new OutputLayer(
 					this.indexLayer,
-                    prevLayer.backProp(errors),
-                    this.neurones.Select(n => n.withError(errors,  this.prevLayer)).ToArray()
-                );
-        }
+					prevLayer,
+					this.neurones.Select(n => n.withError(errors, prevLayer, new NullLayer())).ToArray()
+				);
+		}
+
+
 
         public Layer withNewSet(Layer inputLayer)
         {
@@ -80,6 +88,18 @@ namespace Neurones
 			{
 				return this.prevLayer.neuroneInLayer(indexLayer, indexNeurone);
 			}
+		}
+
+		public IEnumerable<Layer> layerList()
+		{
+			return new List<Layer>(prevLayer.layerList()) { this }; 
+		}
+
+		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
+		{
+			return new Add(
+				this.neurones.Select(n => n.deriveRespectToWeight(errors, new NullLayer(), indexNeuroneFrom)).ToArray()
+			);
 		}
 	}
 

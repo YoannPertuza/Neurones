@@ -30,9 +30,15 @@ namespace Neurones
             throw new Exception("CANNOT LINKED LAYER ON INPUT LAYER");
         }
 
-        public Layer backProp(IEnumerable<Error> errors)
+		public Layer withNextLayer(Layer layer, int index)
+		{
+			return new InputLayer(layer, this.neurones.ToArray());
+		}
+
+		public Layer backProp(IEnumerable<ExitError> errors)
         {
 			return new InputLayer(
+					this.nextLayer.backProp(errors),
 					this.neurones.ToArray()
 				);
         }
@@ -47,19 +53,23 @@ namespace Neurones
             return inputLayer;
         }
 
-		public Layer applyCorrections()
-		{
-			return new InputLayer(
-				this.neurones.ToArray()
-			);
-		}
-
+		
 		public int index()
 		{
 			return 0;
 		}
 
 		public Neurone neuroneInLayer(int indexLayer, int indexNeurone)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<Layer> layerList()
+		{
+			return new List<Layer>() { this };
+		}
+
+		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
 			throw new NotImplementedException();
 		}

@@ -14,9 +14,7 @@ namespace Neurones
 		{
 		}
 
-		public OutputNeurone(int index, Number value, params Synapse[] synapses) : this(index, value, new List<Error>(), 0, synapses)
-		{
-		}
+	
 
 		public OutputNeurone(int index, Number value, IEnumerable<Error> errors, double bias, params Synapse[] synapses)
 		{
@@ -67,24 +65,21 @@ namespace Neurones
 		}
 
 
-		public Neurone withError(IEnumerable<Error> nextErrors, Layer prevLayer)
+		public Neurone withError(IEnumerable<ExitError> errors, Layer prevLayer, Layer nextLayer)
 		{
 			return new OutputNeurone(
 				this.index,
 				this.value,
-				new List<Error>(this.errors) {  },
-				this.bias,
+				this.errors, 
+				this.bias, 
 				this.synapses.Select(
-					s =>
-					s.withError(
-						new Mult(							
-							nextErrors.FirstOrDefault(e => e.neuroneIndex() == this.index).asNumber(),
-							nextErrors.FirstOrDefault(e => e.neuroneIndex() == this.index).derive()
-						),
-						prevLayer
-					)
-				).ToArray()
-			);
+					s => 
+						s.withError(
+							this.deriveRespectToIn(), 
+							this.deriveRespectToOut(errors, new NullLayer()), 
+							prevLayer)
+						).ToArray()
+					);
 		}
 
 
@@ -94,9 +89,24 @@ namespace Neurones
 			return this.synapses.FirstOrDefault(s => s.isFromNeurone(indexPreviousNeurone));
 		}
 
-		public Error lastError()
+
+		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer)
 		{
-			return this.errors.Last();
+			return new Substr(this.value, errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult());
+		}
+
+		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
+		{
+			return new Mult(
+				this.deriveRespectToIn(), 
+				this.deriveRespectToOut(errors, new NullLayer()), 
+				this.synapseFrom(indexNeuroneFrom).weight
+			);
+		}
+
+		public Number deriveRespectToIn()
+		{
+			return new Mult(this.value, new Substr(1, this.value));
 		}
 	}
 

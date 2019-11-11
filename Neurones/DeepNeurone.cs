@@ -69,40 +69,46 @@ namespace Neurones
         }
 
         
-		public Neurone withError(IEnumerable<Error> nextErrors, Layer prevLayer)
-		{
-
-			var d = new Add(nextErrors.Select(e => e.derive()).ToArray());
-
-			return new DeepNeurone(
-				this.index,
-				this.value,
-				new List<Error>(this.errors) { },
-				this.bias,
-				this.synapses.Select(
-					s =>
-					s.withError(
-						new Mult(
-							nextErrors.FirstOrDefault(e => e.neuroneIndex() == this.index).asNumber(),
-							this.value,
-							new Substr(1, this.value)
-						),
-						prevLayer
-					)
-				).ToArray()
-			);
-		}
-
-
-
 		public Synapse synapseFrom(int indexPreviousNeurone)
 		{
 			return this.synapses.FirstOrDefault(s => s.isFromNeurone(indexPreviousNeurone));
 		}
 
-		public Error lastError()
+
+		public Neurone withError(IEnumerable<ExitError> errors, Layer prevLayer, Layer nextLayer)
 		{
-			return this.errors.Last();
+			return new DeepNeurone(
+				this.index, 
+				this.value, 
+				this.errors, 
+				this.bias,
+				this.synapses.Select(
+					s =>
+						s.withError(
+							this.deriveRespectToIn(),
+							this.deriveRespectToOut(errors, nextLayer),
+							prevLayer)
+						).ToArray()
+					);
+		}
+
+		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer)
+		{
+			return nextLayer.deriveRespectToOut(errors, nextLayer, this.index);		
+		}
+
+		public Number deriveRespectToIn()
+		{
+			return new Mult(this.value, new Substr(1, this.value));
+		}
+
+		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
+		{
+			return new Mult(
+				this.deriveRespectToIn(),
+				this.deriveRespectToOut(errors, nextLayer),
+				this.synapseFrom(indexNeuroneFrom).weight
+			);
 		}
 	}
 

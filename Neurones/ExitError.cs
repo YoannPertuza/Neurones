@@ -1,31 +1,21 @@
 ﻿namespace Neurones
 {
-	public class ExitError : Error
+	public class ExitError 
     {
-        public ExitError(int index, Number output, Number expected)
+        public ExitError(int index, Number expected)
         {
             this.index = index;
-            this.output = output;
 			this.expected = expected;
 		}
 
-		private Number output;
 		private Number expected;
         private int index;
 
 		// partial derivative of the total error with respect to concerned output,
-		public Number asNumber()
+		public Number expectedResult()
         {
-			return new Substr(output, expected);
+			return this.expected ;
         }
-
-		public Number derive()
-		{
-			return new Mult(
-				output,
-				new Substr(1, output)
-			);
-		}
 
 		public int neuroneIndex()
         {
