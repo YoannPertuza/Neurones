@@ -5,24 +5,51 @@ namespace Neurones
 {
     public class Network
     {
-        public Network(Layer lastLayer, IEnumerable<Error> expectedOutput)
+        public Network(IEnumerable<Layer> layers)
         {
-            this.lastLayer = lastLayer;
-            this.expectedOutput = expectedOutput;
+            this.layers = layers;
         }
 
-        private Layer lastLayer;
-        private IEnumerable<Error> expectedOutput;
+        private IEnumerable<Layer> layers;
 
-        public IEnumerable<ExitError> errors()
-        {
-            return this.expectedOutput.Select(o => 
-                new ExitError(
-                    o.neuroneIndex(),
-					o.asNumber()
-                )
-            );
-        }
+		public Layer train(IEnumerable<TrainingValue> trainingValues)
+		{	
+			if (trainingValues.Any())
+			{
+				return
+					new Network(
+						new LinkNextLayer(
+							new LinkedPrevLayer(
+								trainingValues.First().InputLayer, this.layers.ToArray()
+							)
+								.linkWithPrevLayers()
+								.lastLayer()
+								.propagate().layerListFromLast().Reverse().ToArray()
+							).linkedLayers()
+							.firstLayer()
+							.backProp(trainingValues.First().Errors)
+							.layerListFromFirst().Reverse().Skip(1)
+						).train(trainingValues.Skip(1));
+			} else
+			{
+				return new LinkedPrevLayer(this.layers).linkWithPrevLayers().lastLayer();
+			}									
+		}
+
+	
+
     }
+
+	public class TrainingValue
+	{
+		public TrainingValue(Layer inputLayer, IEnumerable<ExitError> errors)
+		{
+			this.InputLayer = inputLayer;
+			this.Errors = errors;
+		}
+
+		public Layer InputLayer;
+		public IEnumerable<ExitError> Errors;
+	}
 
 }

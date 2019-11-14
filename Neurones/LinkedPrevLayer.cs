@@ -3,19 +3,23 @@ using System.Linq;
 
 namespace Neurones
 {
-    public class LinkedLayer
+    public class LinkedPrevLayer
     {
-        public LinkedLayer(Layer inputLayer) : this(inputLayer, new List<Layer>().ToArray())
+        public LinkedPrevLayer(Layer inputLayer) : this(inputLayer, new List<Layer>().ToArray())
         {
         }
 
-        public LinkedLayer(Layer inputLayer, params Layer[] layers)
+        public LinkedPrevLayer(Layer inputLayer, params Layer[] layers)
         {
             this.inputLayer = inputLayer;
             this.layers = layers;
         }
 
-        private Layer inputLayer;
+		public LinkedPrevLayer(IEnumerable<Layer> layers) : this(layers.First(), layers.Skip(1).ToArray())
+		{
+		}
+
+		private Layer inputLayer;
         private IEnumerable<Layer> layers;
        
         public Layer lastLayer()
@@ -23,18 +27,18 @@ namespace Neurones
             return this.inputLayer;
         }
 
-        public LinkedLayer linkWithPrevLayers()
+        public LinkedPrevLayer linkWithPrevLayers()
         {       
             if (this.layers.Any())
             {
-                return new LinkedLayer(
+                return new LinkedPrevLayer(
                     this.layers.First().withPrevLayer(this.inputLayer, this.inputLayer.index() + 1), 
                     this.layers.Skip(1).ToArray()
                 ).linkWithPrevLayers();
             }
             else
             {
-                return new LinkedLayer(this.inputLayer);
+                return new LinkedPrevLayer(this.inputLayer);
             }            
         }
 

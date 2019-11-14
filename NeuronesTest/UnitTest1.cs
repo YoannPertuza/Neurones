@@ -155,7 +155,7 @@ namespace NeuronesTest
                     );
 
             var resultLayer =
-                new LinkedLayer(
+                new LinkedPrevLayer(
                     inputs, 
                     new DeepLayer(
                         new DeepNeurone(
@@ -211,7 +211,7 @@ namespace NeuronesTest
 					);
 
 			var resultLayer =
-				new LinkedLayer(
+				new LinkedPrevLayer(
 					inputs,
 					new DeepLayer(
 						new DeepNeurone(
@@ -268,16 +268,32 @@ namespace NeuronesTest
 		[TestMethod]
         public void TestNetworkWithBackPropagation()
         {
-			var inputs =
-				new InputLayer(
-						new InputNeurone(1, 1),
-						new InputNeurone(2, 2)
-					);
+			/*var inputs =
+				
 
-			var resultLayer =
-				new LinkedLayer(
-					inputs,
-					new DeepLayer(
+
+
+		
+				new Sigmoid(
+					new Add(
+						new Mult(
+							new Sigmoid(1 * 0.5 + 2 * 0.6),
+							new DefaultNumber(0.5)
+						),
+						new Mult(
+							new Sigmoid(1 * 0.7 + 2 * 0.8),
+							new DefaultNumber(0.6)
+						)
+					)
+				).value();*/
+
+	
+
+			var errors = 
+				new Network(
+					new List<Layer>()
+					{
+						new DeepLayer(
 						new DeepNeurone(
 							1,
 							new Synapse(1, 1, 0.5),
@@ -295,31 +311,21 @@ namespace NeuronesTest
 							new Synapse(1, 1, 0.5),
 							new Synapse(2, 1, 0.6)
 						)
-					)
-				).linkWithPrevLayers().lastLayer();
-
-			resultLayer = resultLayer.propagate();
-
-			var expectedValue =
-				new Sigmoid(
-					new Add(
-						new Mult(
-							new Sigmoid(1 * 0.5 + 2 * 0.6),
-							new DefaultNumber(0.5)
-						),
-						new Mult(
-							new Sigmoid(1 * 0.7 + 2 * 0.8),
-							new DefaultNumber(0.6)
-						)
-					)
-				).value();
-
-			Assert.AreEqual(
-				resultLayer.propagate().neuroneValue(1).value(),
-				expectedValue
-			);
-
-			var errors = new Network(resultLayer, new List<Error>() { new OutputExpected(1, 1) }).errors();
+					)}
+				).train(
+					new List<TrainingValue>() 
+					{ 
+						new TrainingValue(
+							new InputLayer(
+								new InputNeurone(1, 1),
+								new InputNeurone(2, 2)
+						), 
+						new List<ExitError>() 
+						{ 
+							new ExitError(1, 1)
+						}
+					)}
+				);
 
 			/*Assert.AreEqual(
 				errors.First().asNumber().value(),
@@ -338,14 +344,9 @@ namespace NeuronesTest
 		//https://github.com/hmkcode/netflow.js
 			
 
-
-			var reseau =
-                new LinkedLayer(
-                    new InputLayer(
-                        new InputNeurone(1, 0.05),
-                        new InputNeurone(2, 0.10)
-                    ),
-				   new DeepLayer(
+		var network = new Network(
+			new List<Layer>() {
+				new DeepLayer(
 						new DeepNeurone(
 							1,
 							0.35,
@@ -357,7 +358,7 @@ namespace NeuronesTest
 							0.35,
 							new Synapse(1, 2, 0.25),
 							new Synapse(2, 2, 0.30)
-						)						
+						)
 					),
 				   new OutputLayer(
 						new OutputNeurone(
@@ -372,31 +373,34 @@ namespace NeuronesTest
 							new Synapse(1, 2, 0.50),
 							new Synapse(2, 2, 0.55)
 						)
-					)
-									
-				).linkWithPrevLayers().lastLayer();
+					)});
 
-			
 
-			reseau = reseau.propagate();
 
-			var nt = new Network(reseau, new List<Error>() { new OutputExpected(1, 0.01), new OutputExpected(2, 0.99) });
+			var trainedNt = network.train(
+				new List<TrainingValue>() { 
+					new TrainingValue(
+						new InputLayer(
+							new InputNeurone(1, 0.05),
+							new InputNeurone(2, 0.10)
+						), 
+						new List<ExitError>() { 
+							new ExitError(1, 0.01), 
+							new ExitError(2, 0.99) 
+						})
+				});
 
-			var revertedNt = new LinkNextLayer(reseau.layerList().Reverse().ToArray()).linkedLayers().firstLayer();
+			Assert.IsTrue(trainedNt.neuroneInLayer(1, 1).synapseFrom(1).IsWeightEqualsTo(0.14978071613276281));
+			Assert.IsTrue(trainedNt.neuroneInLayer(1, 1).synapseFrom(2).IsWeightEqualsTo(0.19956143226552567));
 
-			var reseauBp = revertedNt.backProp(nt.errors());
+			Assert.IsTrue(trainedNt.neuroneInLayer(1, 2).synapseFrom(1).IsWeightEqualsTo(0.24975114363236958));
+			Assert.IsTrue(trainedNt.neuroneInLayer(1, 2).synapseFrom(2).IsWeightEqualsTo(0.29950228726473915));
 
-			Assert.IsTrue(reseauBp.neuroneInLayer(1, 1).synapseFrom(1).IsWeightEqualsTo(0.14978071613276281));
-			Assert.IsTrue(reseauBp.neuroneInLayer(1, 1).synapseFrom(2).IsWeightEqualsTo(0.19956143226552567));
+			Assert.IsTrue(trainedNt.neuroneInLayer(2, 1).synapseFrom(1).IsWeightEqualsTo(0.35891647971788465));
+			Assert.IsTrue(trainedNt.neuroneInLayer(2, 1).synapseFrom(2).IsWeightEqualsTo(0.4086661860762334));
 
-			Assert.IsTrue(reseauBp.neuroneInLayer(1, 2).synapseFrom(1).IsWeightEqualsTo(0.24975114363236958));
-			Assert.IsTrue(reseauBp.neuroneInLayer(1, 2).synapseFrom(2).IsWeightEqualsTo(0.29950228726473915));
-
-			Assert.IsTrue(reseauBp.neuroneInLayer(2, 1).synapseFrom(1).IsWeightEqualsTo(0.35891647971788465));
-			Assert.IsTrue(reseauBp.neuroneInLayer(2, 1).synapseFrom(2).IsWeightEqualsTo(0.4086661860762334));
-
-			Assert.IsTrue(reseauBp.neuroneInLayer(2, 2).synapseFrom(1).IsWeightEqualsTo(0.5113012702387375));
-			Assert.IsTrue(reseauBp.neuroneInLayer(2, 2).synapseFrom(2).IsWeightEqualsTo(0.56137012110798912));
+			Assert.IsTrue(trainedNt.neuroneInLayer(2, 2).synapseFrom(1).IsWeightEqualsTo(0.5113012702387375));
+			Assert.IsTrue(trainedNt.neuroneInLayer(2, 2).synapseFrom(2).IsWeightEqualsTo(0.56137012110798912));
 		}
 	}
 

@@ -71,9 +71,14 @@ namespace Neurones
 			}
 		}
 
-		public IEnumerable<Layer> layerList()
+		public IEnumerable<Layer> layerListFromLast()
 		{
 			return new List<Layer>() { this };
+		}
+
+		public IEnumerable<Layer> layerListFromFirst()
+		{
+			return new List<Layer>(this.nextLayer.layerListFromFirst()) { this };
 		}
 
 		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)

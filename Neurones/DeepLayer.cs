@@ -61,8 +61,8 @@ namespace Neurones
 			return
 				new DeepLayer(
 					this.indexLayer,
+					this.prevLayer,
 					nextLayer.backProp(errors),
-					new NullLayer(),
 					this.neurones.Select(n => n.withError(errors, this.prevLayer, this.nextLayer)).ToArray()
 				);
 		}
@@ -93,9 +93,9 @@ namespace Neurones
 			}
 		}
 
-		public IEnumerable<Layer> layerList()
+		public IEnumerable<Layer> layerListFromLast()
 		{
-			return new List<Layer>(prevLayer.layerList()) { this };
+			return new List<Layer>(prevLayer.layerListFromLast()) { this };
 		}
 
 		
@@ -104,6 +104,11 @@ namespace Neurones
 			return new Add(
 				this.neurones.Select(n => n.deriveRespectToWeight(errors, nextLayer, indexNeuroneFrom)).ToArray()
 			);
+		}
+
+		public IEnumerable<Layer> layerListFromFirst()
+		{
+			return new List<Layer>(nextLayer.layerListFromFirst()) { this };
 		}
 	}
 

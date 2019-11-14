@@ -49,7 +49,7 @@ namespace Neurones
 			throw new NotImplementedException();
 		}
 
-		public IEnumerable<Layer> layerList()
+		public IEnumerable<Layer> layerListFromLast()
 		{
 			throw new NotImplementedException();
 		}
@@ -65,6 +65,11 @@ namespace Neurones
 		}
 
 		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<Layer> layerListFromFirst()
 		{
 			throw new NotImplementedException();
 		}
