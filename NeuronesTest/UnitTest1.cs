@@ -335,10 +335,8 @@ namespace NeuronesTest
 	
 		}
 
-
-
-	[TestMethod]
-        public void TestNetworkErrorsWithMultipleFor()
+		[TestMethod]
+        public void TestNetwork_With_Example()
         {
 		// https://hmkcode.com/ai/backpropagation-step-by-step/
 		//https://github.com/hmkcode/netflow.js
@@ -390,7 +388,7 @@ namespace NeuronesTest
 						})
 				});
 
-			Assert.IsTrue(trainedNt.neuroneInLayer(1, 1).synapseFrom(1).IsWeightEqualsTo(0.14978071613276281));
+			/*Assert.IsTrue(trainedNt.neuroneInLayer(1, 1).synapseFrom(1).IsWeightEqualsTo(0.14978071613276281));
 			Assert.IsTrue(trainedNt.neuroneInLayer(1, 1).synapseFrom(2).IsWeightEqualsTo(0.19956143226552567));
 
 			Assert.IsTrue(trainedNt.neuroneInLayer(1, 2).synapseFrom(1).IsWeightEqualsTo(0.24975114363236958));
@@ -400,9 +398,79 @@ namespace NeuronesTest
 			Assert.IsTrue(trainedNt.neuroneInLayer(2, 1).synapseFrom(2).IsWeightEqualsTo(0.4086661860762334));
 
 			Assert.IsTrue(trainedNt.neuroneInLayer(2, 2).synapseFrom(1).IsWeightEqualsTo(0.5113012702387375));
-			Assert.IsTrue(trainedNt.neuroneInLayer(2, 2).synapseFrom(2).IsWeightEqualsTo(0.56137012110798912));
+			Assert.IsTrue(trainedNt.neuroneInLayer(2, 2).synapseFrom(2).IsWeightEqualsTo(0.56137012110798912));*/
+		}
+
+		[TestMethod]
+		public void TestNetwork_With_OtherLayers()
+		{
+			var network = new Network(
+			new List<Layer>() {
+				new DeepLayer(
+						new DeepNeurone(
+							1,
+							0.35,
+							new Synapse(1, 1, 0.15),
+							new Synapse(2, 1, 0.20)
+						),
+						new DeepNeurone(
+							2,
+							0.35,
+							new Synapse(1, 2, 0.25),
+							new Synapse(2, 2, 0.30)
+						)
+					),
+				   new OutputLayer(
+						new OutputNeurone(
+							1,
+							0.6,
+							new Synapse(1, 1, 0.40),
+							new Synapse(2, 1, 0.45)
+						),
+						new OutputNeurone(
+							2,
+							0.6,
+							new Synapse(1, 2, 0.50),
+							new Synapse(2, 2, 0.55)
+						)
+					)});
+
+			var trainedValues = new List<TrainingValue>();
+
+			var rand = new Random();
+
+			for(var i=0; i<2000; i++)
+			{
+				var val1 = rand.NextDouble();
+				var val2 = rand.NextDouble();
+
+				trainedValues.Add(new TrainingValue(
+						new InputLayer(
+							new InputNeurone(1, val1),
+							new InputNeurone(2, val2)
+						),
+						new List<ExitError>() {
+							new ExitError(1, val1 > val2 ? 0.99 : 0.01),
+							new ExitError(2, val1 > val2 ? 0.01 : 0.99)
+						}));
+			}
+
+			var trainedNt = network.train(trainedValues);
+			var result = trainedNt.generalise(new InputLayer(
+							new InputNeurone(1, 0.8),
+							new InputNeurone(2, 0.2)
+						));
+
+			var result2 = trainedNt.generalise(new InputLayer(
+							new InputNeurone(1, 0.2),
+							new InputNeurone(2, 0.8)
+						));
+
+
 		}
 	}
+
+	
 
     public class DataSet
     {

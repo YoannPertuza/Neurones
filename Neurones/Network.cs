@@ -12,7 +12,7 @@ namespace Neurones
 
         private IEnumerable<Layer> layers;
 
-		public Layer train(IEnumerable<TrainingValue> trainingValues)
+		public Network train(IEnumerable<TrainingValue> trainingValues)
 		{	
 			if (trainingValues.Any())
 			{
@@ -32,8 +32,13 @@ namespace Neurones
 						).train(trainingValues.Skip(1));
 			} else
 			{
-				return new LinkedPrevLayer(this.layers).linkWithPrevLayers().lastLayer();
+				return new Network(this.layers);
 			}									
+		}
+
+		public Layer generalise(Layer inputLayer)
+		{
+			return new LinkedPrevLayer(inputLayer, this.layers.ToArray()).linkWithPrevLayers().lastLayer().propagate();
 		}
 
 	
