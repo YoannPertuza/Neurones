@@ -409,13 +409,13 @@ namespace NeuronesTest
 				new DeepLayer(
 						new DeepNeurone(
 							1,
-							0.35,
-							new Synapse(1, 1, 0.15),
-							new Synapse(2, 1, 0.20)
+							0.4,
+							new Synapse(1, 1, 0.10),
+							new Synapse(2, 1, 0.15)
 						),
 						new DeepNeurone(
 							2,
-							0.35,
+							0.4,
 							new Synapse(1, 2, 0.25),
 							new Synapse(2, 2, 0.30)
 						)
@@ -424,7 +424,7 @@ namespace NeuronesTest
 						new OutputNeurone(
 							1,
 							0.6,
-							new Synapse(1, 1, 0.40),
+							new Synapse(1, 1, 0.35),
 							new Synapse(2, 1, 0.45)
 						),
 						new OutputNeurone(
@@ -450,8 +450,8 @@ namespace NeuronesTest
 							new InputNeurone(2, val2)
 						),
 						new List<ExitError>() {
-							new ExitError(1, val1 > val2 ? 0.99 : 0.01),
-							new ExitError(2, val1 > val2 ? 0.01 : 0.99)
+							new ExitError(1, val1 > val2 ? 1 : 0),
+							new ExitError(2, val1 > val2 ? 0 : 1)
 						}));
 			}
 
