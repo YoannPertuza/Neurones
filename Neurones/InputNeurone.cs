@@ -32,22 +32,13 @@ namespace Neurones
             return targetNeurone == this.index;
         }
 
-		public IEnumerable<Synapse> synapsesFrom()
-        {
-            throw new Exception("INPUT NEURONE DOES NOT HAVE INPUT SYNAPSE");
-        }
-
         public Neurone withValue(Layer layer)
         {
             throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
         }
 
-        public double val()
-        {
-			return this.value.value();
-        }
 
-		public Neurone withError(IEnumerable<ExitError> nextErrors, Layer prevLayer, Layer nextLayer)
+		public Neurone withNewSynapses(IEnumerable<ExitError> nextErrors, Layer prevLayer, Layer nextLayer)
 		{
 			return new InputNeurone(
 				this.index,
@@ -56,24 +47,9 @@ namespace Neurones
 			);
 		}
 
-		public Neurone applyCorrections(Layer prevLayer)
-		{
-			throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
-		}
-
 		public Synapse synapseFrom(int indexPreviousNeurone)
 		{
 			throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
-		}
-
-		public Error lastError()
-		{
-			throw new NotImplementedException();
-		}
-
-		public Neurone withError(ExitError error, Layer prevLayer)
-		{
-			throw new NotImplementedException();
 		}
 
 		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)

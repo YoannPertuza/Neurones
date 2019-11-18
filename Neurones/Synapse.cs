@@ -6,24 +6,23 @@ namespace Neurones
 {
     public class Synapse
 	{
-        public Synapse(int originNeurone, int destinNeurone, double weight) : this(originNeurone, destinNeurone, weight, new List<Number>())
-		{
+       
+		
 
+		public Synapse(int originNeurone, int destinNeurone, double weight) : this(originNeurone, destinNeurone, new DefaultNumber(weight))
+		{
 		}
 
-		public Synapse(int originNeurone, int destinNeurone, double weight, List<Number> gradientErrors)
+		public Synapse(int originNeurone, int destinNeurone, Number weight)
 		{
 			this.originNeurone = originNeurone;
 			this.destinNeurone = destinNeurone;
-			this.weight = new DefaultNumber(weight);
-			this.gradientErrors = gradientErrors;
-
+			this.weight = weight;
 		}
 
 		private int originNeurone;
         private int destinNeurone;
 		private Number weight;
-		public List<Number> gradientErrors;
 
 		public bool isFromNeurone(int neuroneIndex)
 		{
@@ -42,7 +41,7 @@ namespace Neurones
 
 		public Number value(Layer prevLayer)
 		{
-            return new DefaultNumber(this.value(prevLayer.neuroneValue(this.originNeurone)).value());
+            return this.value(prevLayer.neuroneValue(this.originNeurone));
 		}
 
 		public Number deriveWeight(Number deriveIn, Number deriveOut)
@@ -50,7 +49,7 @@ namespace Neurones
 			return new Mult(deriveIn, deriveOut, this.weight);
 		}
         
-		public Synapse withError(Number deriveToIn, Number deriveToOut, Layer prevLayer)
+		public Synapse withAdjustedWeight(Number deriveToIn, Number deriveToOut, Layer prevLayer)
 		{
 			return new Synapse(
 					this.originNeurone,
@@ -65,8 +64,7 @@ namespace Neurones
 								prevLayer.neuroneValue(this.originNeurone)
 							)
 						)
-					).value(),
-					null
+					).value()
 				);
 		}
 

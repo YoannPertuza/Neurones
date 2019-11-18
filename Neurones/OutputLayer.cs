@@ -57,7 +57,7 @@ namespace Neurones
 				new OutputLayer(
 					this.indexLayer,
 					prevLayer,
-					this.neurones.Select(n => n.withError(errors, prevLayer, new NullLayer())).ToArray()
+					this.neurones.Select(n => n.withNewSynapses(errors, prevLayer, new NullLayer())).ToArray()
 				);
 		}
 

@@ -63,7 +63,7 @@ namespace Neurones
 					this.indexLayer,
 					this.prevLayer,
 					nextLayer.backProp(errors),
-					this.neurones.Select(n => n.withError(errors, this.prevLayer, this.nextLayer)).ToArray()
+					this.neurones.Select(n => n.withNewSynapses(errors, this.prevLayer, this.nextLayer)).ToArray()
 				);
 		}
 

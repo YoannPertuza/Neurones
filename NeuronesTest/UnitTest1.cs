@@ -409,13 +409,11 @@ namespace NeuronesTest
 				new DeepLayer(
 						new DeepNeurone(
 							1,
-							0.4,
 							new Synapse(1, 1, 0.10),
 							new Synapse(2, 1, 0.15)
 						),
 						new DeepNeurone(
 							2,
-							0.4,
 							new Synapse(1, 2, 0.25),
 							new Synapse(2, 2, 0.30)
 						)
@@ -423,13 +421,11 @@ namespace NeuronesTest
 				   new OutputLayer(
 						new OutputNeurone(
 							1,
-							0.6,
 							new Synapse(1, 1, 0.35),
 							new Synapse(2, 1, 0.45)
 						),
 						new OutputNeurone(
 							2,
-							0.6,
 							new Synapse(1, 2, 0.50),
 							new Synapse(2, 2, 0.55)
 						)
@@ -439,7 +435,7 @@ namespace NeuronesTest
 
 			var rand = new Random();
 
-			for(var i=0; i<2000; i++)
+			for(var i=0; i<500; i++)
 			{
 				var val1 = rand.NextDouble();
 				var val2 = rand.NextDouble();
@@ -467,6 +463,7 @@ namespace NeuronesTest
 						));
 
 
+			var r = result.neuroneValue(1).value();
 		}
 	}
 

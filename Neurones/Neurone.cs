@@ -5,12 +5,9 @@ namespace Neurones
     public interface Neurone
     {
         Number outputValue(Layer prevLayer);
-        double val();
         bool find(int targetNeurone);
 
-		IEnumerable<Synapse> synapsesFrom();
-
-		Neurone withError(IEnumerable<ExitError> errors, Layer prevLayer, Layer nextLayer);
+		Neurone withNewSynapses(IEnumerable<ExitError> errors, Layer prevLayer, Layer nextLayer);
 
 		Neurone withValue(Layer prevLayer);
 

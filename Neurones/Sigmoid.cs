@@ -53,7 +53,7 @@ namespace Neurones
 
 		public Number derive(Number x)
 		{
-			return new Mult(new Sigmoid(x), new Substr(1, new Sigmoid(x)));
+			return new Mult(x, new Substr(1, x));
 		}
 	}
 
@@ -66,7 +66,7 @@ namespace Neurones
 
 		public Number derive(Number x)
 		{
-			return new Substr(1, new Exp(new TanH(x), 2));
+			return new Substr(1, new Exp(x, 2));
 		}
 	}
 }
