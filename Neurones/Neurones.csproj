@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeriveCache.cs" />
     <Compile Include="Operation\ActivationFnc.cs" />
     <Compile Include="Operation\Add.cs" />
     <Compile Include="BackPropagation.cs" />

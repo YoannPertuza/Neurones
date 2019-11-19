@@ -28,13 +28,15 @@ namespace Neurones
             this.value = value;
 			this.bias = bias;
 			this.activation = activation;
-		}
+			this.localCache = new DeriveCache();
+	}
 
 		private int index;
 		private IEnumerable<Synapse> synapses;
         private Number value;
 		private double bias;
 		private ActivationFnc activation;
+		private DeriveCache localCache;
 
 		public Number outputValue(Layer prevLayer)
 		{
@@ -85,11 +87,13 @@ namespace Neurones
 
 		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
-			return 
-				this.synapseFrom(indexNeuroneFrom).deriveWeight(
-					this.activation.derive(this.value),
-					nextLayer.deriveRespectToOut(errors, nextLayer, this.index)
-				);
+			return this.localCache.get(
+							indexNeuroneFrom, 
+							() => this.synapseFrom(indexNeuroneFrom).deriveWeight(
+								this.activation.derive(this.value),
+								nextLayer.deriveRespectToOut(errors, nextLayer, this.index)
+							)
+						);
 		}
 
 		public override string ToString()
