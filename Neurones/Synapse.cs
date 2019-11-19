@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Neurones
 {
@@ -71,6 +72,15 @@ namespace Neurones
 		public bool IsWeightEqualsTo(double expectedWeight)
 		{
 			return expectedWeight == this.weight.value();
+		}
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append("[");
+			sb.Append($"from: {this.originNeurone}, to: {this.destinNeurone}, w:{this.weight.value()}");
+			sb.Append("]");
+			return sb.ToString();	
 		}
 	}
 

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Neurones
 {
@@ -85,6 +87,17 @@ namespace Neurones
 					this.activation.derive(this.value),
 					new Substr(this.value, errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult())
 				);
+		}
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append("[");
+			sb.Append($"index: {this.index}, o: {this.value.value()}, ");
+			sb.Append(String.Join(", ", this.synapses.Select(s => s.ToString())));
+			sb.Append("]\r\n");
+
+			return sb.ToString();
 		}
 	}
 

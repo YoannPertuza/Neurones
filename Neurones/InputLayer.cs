@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Neurones
 {
@@ -71,19 +72,28 @@ namespace Neurones
 			}
 		}
 
-		public IEnumerable<Layer> layerListFromLast()
+		public IEnumerable<Layer> toListFromLast()
 		{
 			return new List<Layer>() { this };
 		}
 
-		public IEnumerable<Layer> layerListFromFirst()
+		public IEnumerable<Layer> toListFromFirst()
 		{
-			return new List<Layer>(this.nextLayer.layerListFromFirst()) { this };
+			return new List<Layer>(this.nextLayer.toListFromFirst()) { this };
 		}
 
 		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
 			throw new NotImplementedException();
+		}
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append("--- INPUT LAYER --- \r\n");
+			sb.Append(String.Join(string.Empty, this.neurones.Select(n => n.ToString()).ToArray()));
+
+			return sb.ToString();
 		}
 	}
 

@@ -181,7 +181,7 @@ namespace NeuronesTest
 							new Synapse(2,2, 0.8)
 						)
 					)
-                ).linkWithPrevLayers().lastLayer();
+                ).link().lastLayer();
 
             resultLayer = resultLayer.propagate();
             Assert.AreEqual(
@@ -232,7 +232,7 @@ namespace NeuronesTest
 							new Synapse(2, 1, 0.6)
 						)
 					)
-				).linkWithPrevLayers().lastLayer();
+				).link().lastLayer();
 
 			resultLayer = resultLayer.propagate();
 
@@ -462,6 +462,14 @@ namespace NeuronesTest
 							new InputNeurone(2, 0.8)
 						));
 
+			var err = new TotalErrorNetwork(
+				trainedNt.generalise(new InputLayer(
+							new InputNeurone(1, 0.8),
+							new InputNeurone(2, 0.2)
+						)), new List<ExitError>() {
+							new ExitError(1, 1),
+							new ExitError(2, 0)
+						}).value();
 
 			var r = result.neuroneValue(1).value();
 		}

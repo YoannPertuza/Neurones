@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Neurones
 {
@@ -55,6 +56,16 @@ namespace Neurones
 		public Number deriveRespectToWeight(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
 			throw new NotImplementedException();
+		}
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append("[");
+			sb.Append($"{this.value.value()}");
+			sb.Append("]\r\n");
+
+			return sb.ToString();
 		}
 	}
 

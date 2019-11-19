@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+
 
 namespace Neurones
 {
@@ -88,6 +90,17 @@ namespace Neurones
 					this.activation.derive(this.value),
 					nextLayer.deriveRespectToOut(errors, nextLayer, this.index)
 				);
+		}
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append("[");
+			sb.Append($"{this.value.value()}, ");
+			sb.Append(String.Join(", ", this.synapses.Select(s => s.ToString())));
+			sb.Append("]\r\n");
+
+			return sb.ToString();
 		}
 	}
 

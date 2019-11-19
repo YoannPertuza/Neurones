@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Neurones
 {
@@ -61,9 +62,18 @@ namespace Neurones
 				);
 		}
 
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append("--- OUTPUT LAYER --- \r\n");
+			sb.Append(String.Join(string.Empty, this.neurones.Select(n => n.ToString()).ToArray()));
 
+			sb.Append(this.prevLayer.ToString());
 
-        public Layer withNewSet(Layer inputLayer)
+			return sb.ToString();
+		}
+
+		public Layer withNewSet(Layer inputLayer)
         {
             return new OutputLayer(
 				this.indexLayer,
@@ -90,12 +100,12 @@ namespace Neurones
 			}
 		}
 
-		public IEnumerable<Layer> layerListFromLast()
+		public IEnumerable<Layer> toListFromLast()
 		{
-			return new List<Layer>(prevLayer.layerListFromLast()) { this }; 
+			return new List<Layer>(prevLayer.toListFromLast()) { this }; 
 		}
 
-		public IEnumerable<Layer> layerListFromFirst()
+		public IEnumerable<Layer> toListFromFirst()
 		{
 			return new List<Layer>() { this };
 		}

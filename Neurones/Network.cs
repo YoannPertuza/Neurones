@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Neurones
 {
-    public class Network
+	public class Network
     {
         public Network(IEnumerable<Layer> layers)
         {
@@ -15,21 +15,16 @@ namespace Neurones
 		public Network train(IEnumerable<TrainingValue> trainingValues)
 		{	
 			if (trainingValues.Any())
-			{
-				return
+			{							
+				return 
 					new Network(
-						new LinkNextLayer(
-							new LinkedPrevLayer(
-								trainingValues.First().InputLayer, this.layers.ToArray()
-							)
-								.linkWithPrevLayers()
-								.lastLayer()
-								.propagate().layerListFromLast().Reverse().ToArray()
-							).linkedLayers()
-							.firstLayer()
-							.backProp(trainingValues.First().Errors)
-							.layerListFromFirst().Reverse().Skip(1)
-						).train(trainingValues.Skip(1));
+						new BackPropagation(
+							new ForwardPropagation(
+								trainingValues.First().InputLayer,
+								this.layers.ToArray()
+							), trainingValues.First().Errors
+						).execute().toListFromFirst().Reverse().Skip(1)
+					).train(trainingValues.Skip(1));
 			} else
 			{
 				return new Network(this.layers);
@@ -38,11 +33,8 @@ namespace Neurones
 
 		public Layer generalise(Layer inputLayer)
 		{
-			return new LinkedPrevLayer(inputLayer, this.layers.ToArray()).linkWithPrevLayers().lastLayer().propagate();
+			return new LinkedPrevLayer(inputLayer, this.layers.ToArray()).link().lastLayer().propagate();
 		}
-
-	
-
     }
 
 	public class TrainingValue

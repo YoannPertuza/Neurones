@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Neurones
 {
@@ -93,9 +95,9 @@ namespace Neurones
 			}
 		}
 
-		public IEnumerable<Layer> layerListFromLast()
+		public IEnumerable<Layer> toListFromLast()
 		{
-			return new List<Layer>(prevLayer.layerListFromLast()) { this };
+			return new List<Layer>(prevLayer.toListFromLast()) { this };
 		}
 
 		
@@ -106,9 +108,20 @@ namespace Neurones
 			);
 		}
 
-		public IEnumerable<Layer> layerListFromFirst()
+		public IEnumerable<Layer> toListFromFirst()
 		{
-			return new List<Layer>(nextLayer.layerListFromFirst()) { this };
+			return new List<Layer>(nextLayer.toListFromFirst()) { this };
+		}
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append("--- DEEP LAYER --- \r\n");
+			sb.Append(String.Join(string.Empty, this.neurones.Select(n => n.ToString()).ToArray()));
+
+			sb.Append(this.prevLayer.ToString());
+
+			return sb.ToString();
 		}
 	}
 

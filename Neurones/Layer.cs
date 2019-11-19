@@ -17,9 +17,9 @@ namespace Neurones
 
 		Layer withNextLayer(Layer layer);
 
-		IEnumerable<Layer> layerListFromLast();
+		IEnumerable<Layer> toListFromLast();
 
-		IEnumerable<Layer> layerListFromFirst();
+		IEnumerable<Layer> toListFromFirst();
 
 		Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom);
 

@@ -49,7 +49,7 @@ namespace Neurones
 			throw new NotImplementedException();
 		}
 
-		public IEnumerable<Layer> layerListFromLast()
+		public IEnumerable<Layer> toListFromLast()
 		{
 			throw new NotImplementedException();
 		}
@@ -69,7 +69,7 @@ namespace Neurones
 			throw new NotImplementedException();
 		}
 
-		public IEnumerable<Layer> layerListFromFirst()
+		public IEnumerable<Layer> toListFromFirst()
 		{
 			throw new NotImplementedException();
 		}

@@ -5,14 +5,14 @@ namespace Neurones
 {
 	public class TotalErrorNetwork : Number
 	{
-		public TotalErrorNetwork(Layer outputLayer, IEnumerable<Error> expectedResult)
+		public TotalErrorNetwork(Layer outputLayer, IEnumerable<ExitError> expectedResult)
 		{
 			this.outputLayer = outputLayer;
 			this.expectedResult = expectedResult;
 		}
 
 		private Layer outputLayer;
-		private IEnumerable<Error> expectedResult;
+		private IEnumerable<ExitError> expectedResult;
 
 		public double value()
 		{
@@ -22,7 +22,7 @@ namespace Neurones
 					new Div(
 						new Power2(
 							new Substr(
-								e.asNumber(),
+								e.expectedResult(),
 								this.outputLayer.neuroneValue(e.neuroneIndex())
 							)
 						),

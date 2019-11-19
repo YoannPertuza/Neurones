@@ -27,14 +27,14 @@ namespace Neurones
             return this.inputLayer;
         }
 
-        public LinkedPrevLayer linkWithPrevLayers()
+        public LinkedPrevLayer link()
         {       
             if (this.layers.Any())
             {
                 return new LinkedPrevLayer(
                     this.layers.First().withPrevLayer(this.inputLayer, this.inputLayer.index() + 1), 
                     this.layers.Skip(1).ToArray()
-                ).linkWithPrevLayers();
+                ).link();
             }
             else
             {
@@ -45,33 +45,39 @@ namespace Neurones
 		
 	}
 
-	public class LinkNextLayer
+	public class LinkedNextLayer
 	{
-		public LinkNextLayer(Layer inputLayer, params Layer[] layers)
+		
+
+		public LinkedNextLayer(params Layer[] layers) : this(layers.First(), layers.Skip(1).ToArray())
+		{
+		}
+
+		public LinkedNextLayer(IEnumerable<Layer> layers) : this(layers.First(), layers.Skip(1).ToArray())
+		{
+		}
+
+		public LinkedNextLayer(Layer inputLayer, params Layer[] layers)
 		{
 			this.inputLayer = inputLayer;
 			this.layers = layers;
 		}
 
-		public LinkNextLayer(params Layer[] layers) : this(layers.First(), layers.Skip(1).ToArray())
-		{
-		}
-
 		private Layer inputLayer;
 		private IEnumerable<Layer> layers;
 
-		public LinkNextLayer linkedLayers()
+		public LinkedNextLayer link()
 		{
 			if (this.layers.Any())
 			{
-				return new LinkNextLayer(
+				return new LinkedNextLayer(
 					this.layers.First().withNextLayer(this.inputLayer),
 					this.layers.Skip(1).ToArray()
-				).linkedLayers();
+				).link();
 			}
 			else
 			{
-				return new LinkNextLayer(this.inputLayer);
+				return new LinkedNextLayer(this.inputLayer);
 			}
 		}
 
