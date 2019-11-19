@@ -31,7 +31,7 @@ namespace Neurones
 			}									
 		}
 
-		public Layer generalise(Layer inputLayer)
+		public Layer predict(Layer inputLayer)
 		{
 			return new LinkedPrevLayer(inputLayer, this.layers.ToArray()).link().lastLayer().propagate();
 		}

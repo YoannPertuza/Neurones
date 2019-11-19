@@ -14,7 +14,7 @@ namespace Neurones
             throw new Exception("CANNOT LINK NULL LAYER");
         }
 
-        public Layer backProp(IEnumerable<Error> errors)
+        public Layer backProp(IEnumerable<ExitError> errors)
         {
             throw new Exception("CANNOT LINK NULL LAYER");
         }
@@ -29,7 +29,7 @@ namespace Neurones
             throw new Exception("INPUT NEURONE CANNOT BE AN ERROR");
         }
 
-        public Layer backProp(IEnumerable<Error> errors, IEnumerable<Synapse> synapses)
+        public Layer backProp(IEnumerable<ExitError> errors, IEnumerable<Synapse> synapses)
         {
             throw new NotImplementedException();
         }
@@ -59,11 +59,7 @@ namespace Neurones
 			throw new NotImplementedException();
 		}
 
-		public Layer backProp(IEnumerable<ExitError> errors)
-		{
-			throw new NotImplementedException();
-		}
-
+	
 		public Number deriveRespectToOut(IEnumerable<ExitError> errors, Layer nextLayer, int indexNeuroneFrom)
 		{
 			throw new NotImplementedException();

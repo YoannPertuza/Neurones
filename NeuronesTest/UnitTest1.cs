@@ -452,18 +452,18 @@ namespace NeuronesTest
 			}
 
 			var trainedNt = network.train(trainedValues);
-			var result = trainedNt.generalise(new InputLayer(
+			var result = trainedNt.predict(new InputLayer(
 							new InputNeurone(1, 0.8),
 							new InputNeurone(2, 0.2)
 						));
 
-			var result2 = trainedNt.generalise(new InputLayer(
+			var result2 = trainedNt.predict(new InputLayer(
 							new InputNeurone(1, 0.2),
 							new InputNeurone(2, 0.8)
 						));
 
 			var err = new TotalErrorNetwork(
-				trainedNt.generalise(new InputLayer(
+				trainedNt.predict(new InputLayer(
 							new InputNeurone(1, 0.8),
 							new InputNeurone(2, 0.2)
 						)), new List<ExitError>() {
@@ -477,24 +477,5 @@ namespace NeuronesTest
 
 	
 
-    public class DataSet
-    {
-        public DataSet(Layer inputsData, List<Error> outputExpectedData)
-        {
-            this.inputsData = inputsData;
-            this.outputExpectedData = outputExpectedData;
-        }
 
-        private Layer inputsData;
-        private List<Error> outputExpectedData;
-
-        public Layer inputs()
-        {
-            return this.inputsData;
-        }
-
-        public List<Error> outputExpected() {
-            return this.outputExpectedData;
-        }
-    }
 }

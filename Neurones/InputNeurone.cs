@@ -7,12 +7,12 @@ namespace Neurones
 {
     public class InputNeurone : Neurone
     {
-        public InputNeurone(int index, double value) : this(index, new DefaultNumber(value), new List<Error>())
+        public InputNeurone(int index, double value) : this(index, new DefaultNumber(value), new List<ExitError>())
 		{
 		}
 
 	
-		public InputNeurone(int index, Number value, IEnumerable<Error> errors)
+		public InputNeurone(int index, Number value, IEnumerable<ExitError> errors)
 		{
 			this.index = index;
 			this.value = value;
@@ -21,7 +21,7 @@ namespace Neurones
 
 		private int index;
         private Number value;
-		private IEnumerable<Error> errors;
+		private IEnumerable<ExitError> errors;
 
 		public Number outputValue(Layer prevLayer)
         {
@@ -44,7 +44,7 @@ namespace Neurones
 			return new InputNeurone(
 				this.index,
 				this.value,
-				new List<Error>() {  }
+				new List<ExitError>() {  }
 			);
 		}
 
