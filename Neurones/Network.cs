@@ -35,6 +35,11 @@ namespace Neurones
 		{
 			return new LinkedPrevLayer(inputLayer, this.layers.ToArray()).link().lastLayer().propagate();
 		}
+
+		public Layer layer()
+		{
+			return new LinkedPrevLayer(new InputLayer(), this.layers.ToArray()).link().lastLayer();
+		}
     }
 
 	public class TrainingValue

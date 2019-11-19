@@ -16,7 +16,10 @@ namespace Neurones
 		{
 		}
 
-	
+		public OutputNeurone(int index, double bias, ActivationFnc activation, params Synapse[] synapses) : this(index, new NullNumber(), bias, activation, synapses)
+		{
+		}
+
 
 		public OutputNeurone(int index, Number value,  double bias, ActivationFnc activation, params Synapse[] synapses)
 		{

@@ -13,7 +13,14 @@ namespace Neurones
 		{
 		}
 
+		public DeepNeurone(int index, ActivationFnc activation, params Synapse[] synapses) : this(index, new NullNumber(), 0, activation, synapses)
+		{
+		}
 		public DeepNeurone(int index, double bias, params Synapse[] synapses) : this(index, new NullNumber(), bias, new TanHFnc(), synapses)
+		{
+		}
+
+		public DeepNeurone(int index, double bias, ActivationFnc activation, params Synapse[] synapses) : this(index, new NullNumber(), bias, activation, synapses)
 		{
 		}
 

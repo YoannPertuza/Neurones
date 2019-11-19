@@ -7,7 +7,7 @@ using System.Linq;
 namespace NeuronesTest
 {
 	[TestClass]
-	public class UnitTest1
+	public class NetworkTest
 	{
 		[TestMethod]
 		public void TestSigmoid()
@@ -31,6 +31,7 @@ namespace NeuronesTest
 					),
 					new DeepNeurone(
 						1,
+						new SigmoidFnc(),
 						new Synapse(1,1, 0.5)
 					)
 				).neuroneValue(1).value(),
@@ -48,6 +49,7 @@ namespace NeuronesTest
                     ),
                     new DeepNeurone(
                         1,
+						new SigmoidFnc(),
                         new Synapse(1, 1, 0.5)
                     )
                 ).propagate().neuroneValue(1).value(),
@@ -69,11 +71,13 @@ namespace NeuronesTest
 					inputs,
 					new DeepNeurone(
 						1,
+						new SigmoidFnc(),
 						new Synapse(1,1, 0.5),
 						new Synapse(2,1, 0.5)
 					),
                     new DeepNeurone(
 						2,
+						new SigmoidFnc(),
 						new Synapse(1,2, 0.5),
 						new Synapse(2,2, 0.5)
 					)
@@ -90,20 +94,15 @@ namespace NeuronesTest
 		}
 
 		[TestMethod]
-		public void TwoDeepLayer()
+		public void TwoDeepLayer_TanH()
 		{
-            var inputs =
-                new InputLayer(
-                        new InputNeurone(1, 1),
-                        new InputNeurone(2, 2)
-                    );
-
+           
 			var resultLayer =
-				new DeepLayer(
+				new OutputLayer(
 					new DeepLayer(
                          new InputLayer(
-                            new InputNeurone(1, 0),
-                            new InputNeurone(2, 0)
+                            new InputNeurone(1, 1),
+                            new InputNeurone(2, 2)
                         ),
                         new DeepNeurone(
 							1,
@@ -116,12 +115,12 @@ namespace NeuronesTest
 							new Synapse(2,2, 0.8)
 						)
 					),
-                    new DeepNeurone(
+                    new OutputNeurone(
 						1,
 						new Synapse(1,1, 0.5),
 						new Synapse(2,1, 0.6)
 					),
-                    new DeepNeurone(
+                    new OutputNeurone(
 						2,
 						new Synapse(1,2, 0.7),
 						new Synapse(2,2, 0.8)
@@ -129,15 +128,15 @@ namespace NeuronesTest
 				);
 
 			Assert.AreEqual(
-                resultLayer.withNewSet(inputs).propagate().neuroneValue(1).value(),
-				new Sigmoid(
+                resultLayer.propagate().neuroneValue(1).value(),
+				new TanH(
 					new Add(				
 						new Mult(
-							new Sigmoid(1 * 0.5 + 2 * 0.6),
+							new TanH(1 * 0.5 + 2 * 0.6),
 							new DefaultNumber(0.5)
 						),
 						new Mult(
-							new Sigmoid(1 * 0.7 + 2 * 0.8),
+							new TanH(1 * 0.7 + 2 * 0.8),
 							new DefaultNumber(0.6)
 						)
 					)
@@ -186,14 +185,14 @@ namespace NeuronesTest
             resultLayer = resultLayer.propagate();
             Assert.AreEqual(
 				resultLayer.propagate().neuroneValue(1).value(),
-				new Sigmoid(
+				new TanH(
 					new Add(				
 						new Mult(
-							new Sigmoid(1 * 0.5 + 2 * 0.6),
+							new TanH(1 * 0.5 + 2 * 0.6),
 							new DefaultNumber(0.5)
 						),
 						new Mult(
-							new Sigmoid(1 * 0.7 + 2 * 0.8),
+							new TanH(1 * 0.7 + 2 * 0.8),
 							new DefaultNumber(0.6)
 						)
 					)
@@ -216,11 +215,13 @@ namespace NeuronesTest
 					new DeepLayer(
 						new DeepNeurone(
 							1,
+							new SigmoidFnc(),
 							new Synapse(1, 1, 0.5),
 							new Synapse(2, 1, 0.6)
 						),
 						new DeepNeurone(
 							2,
+							new SigmoidFnc(),
 							new Synapse(1, 2, 0.7),
 							new Synapse(2, 2, 0.8)
 						)
@@ -228,6 +229,7 @@ namespace NeuronesTest
 					new DeepLayer(
 						new DeepNeurone(
 							1,
+							new SigmoidFnc(),
 							new Synapse(1, 1, 0.5),
 							new Synapse(2, 1, 0.6)
 						)
@@ -266,76 +268,6 @@ namespace NeuronesTest
 		}
 
 		[TestMethod]
-        public void TestNetworkWithBackPropagation()
-        {
-			/*var inputs =
-				
-
-
-
-		
-				new Sigmoid(
-					new Add(
-						new Mult(
-							new Sigmoid(1 * 0.5 + 2 * 0.6),
-							new DefaultNumber(0.5)
-						),
-						new Mult(
-							new Sigmoid(1 * 0.7 + 2 * 0.8),
-							new DefaultNumber(0.6)
-						)
-					)
-				).value();*/
-
-	
-
-			var errors = 
-				new Network(
-					new List<Layer>()
-					{
-						new DeepLayer(
-						new DeepNeurone(
-							1,
-							new Synapse(1, 1, 0.5),
-							new Synapse(2, 1, 0.6)
-						),
-						new DeepNeurone(
-							2,
-							new Synapse(1, 2, 0.7),
-							new Synapse(2, 2, 0.8)
-						)
-					),
-					new OutputLayer(
-						new OutputNeurone(
-							1,
-							new Synapse(1, 1, 0.5),
-							new Synapse(2, 1, 0.6)
-						)
-					)}
-				).train(
-					new List<TrainingValue>() 
-					{ 
-						new TrainingValue(
-							new InputLayer(
-								new InputNeurone(1, 1),
-								new InputNeurone(2, 2)
-						), 
-						new List<ExitError>() 
-						{ 
-							new ExitError(1, 1)
-						}
-					)}
-				);
-
-			/*Assert.AreEqual(
-				errors.First().asNumber().value(),
-				1 - expectedValue
-			);*/
-
-	
-		}
-
-		[TestMethod]
         public void TestNetwork_With_Example()
         {
 		// https://hmkcode.com/ai/backpropagation-step-by-step/
@@ -348,12 +280,14 @@ namespace NeuronesTest
 						new DeepNeurone(
 							1,
 							0.35,
+							new SigmoidFnc(),
 							new Synapse(1, 1, 0.15),
 							new Synapse(2, 1, 0.20)
 						),
 						new DeepNeurone(
 							2,
 							0.35,
+							new SigmoidFnc(),
 							new Synapse(1, 2, 0.25),
 							new Synapse(2, 2, 0.30)
 						)
@@ -362,12 +296,14 @@ namespace NeuronesTest
 						new OutputNeurone(
 							1,
 							0.6,
+							new SigmoidFnc(),
 							new Synapse(1, 1, 0.40),
 							new Synapse(2, 1, 0.45)
 						),
 						new OutputNeurone(
 							2,
 							0.6,
+							new SigmoidFnc(),
 							new Synapse(1, 2, 0.50),
 							new Synapse(2, 2, 0.55)
 						)
@@ -386,9 +322,9 @@ namespace NeuronesTest
 							new ExitError(1, 0.01), 
 							new ExitError(2, 0.99) 
 						})
-				});
+				}).layer();
 
-			/*Assert.IsTrue(trainedNt.neuroneInLayer(1, 1).synapseFrom(1).IsWeightEqualsTo(0.14978071613276281));
+			Assert.IsTrue(trainedNt.neuroneInLayer(1, 1).synapseFrom(1).IsWeightEqualsTo(0.14978071613276281));
 			Assert.IsTrue(trainedNt.neuroneInLayer(1, 1).synapseFrom(2).IsWeightEqualsTo(0.19956143226552567));
 
 			Assert.IsTrue(trainedNt.neuroneInLayer(1, 2).synapseFrom(1).IsWeightEqualsTo(0.24975114363236958));
@@ -398,7 +334,7 @@ namespace NeuronesTest
 			Assert.IsTrue(trainedNt.neuroneInLayer(2, 1).synapseFrom(2).IsWeightEqualsTo(0.4086661860762334));
 
 			Assert.IsTrue(trainedNt.neuroneInLayer(2, 2).synapseFrom(1).IsWeightEqualsTo(0.5113012702387375));
-			Assert.IsTrue(trainedNt.neuroneInLayer(2, 2).synapseFrom(2).IsWeightEqualsTo(0.56137012110798912));*/
+			Assert.IsTrue(trainedNt.neuroneInLayer(2, 2).synapseFrom(2).IsWeightEqualsTo(0.56137012110798912));
 		}
 
 		[TestMethod]
