@@ -9,7 +9,7 @@
 
 		public Number derive(Number x)
 		{
-			return new Mult(x, new Substr(1, x));
+			return new Mult(new Sigmoid(x), new Substr(1, new Sigmoid(x)));
 		}
 	}
 }

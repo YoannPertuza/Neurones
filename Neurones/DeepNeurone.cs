@@ -51,7 +51,7 @@ namespace Neurones
 				this.activation.apply(
 					 new Add(
 						new Add(
-							this.synapses.ToList().Select(s => s.value(prevLayer)).ToArray()				
+							this.synapses.ToList().Select(s => s.value(prevLayer)).ToArray() 				
 						),
 						new DefaultNumber(this.bias)
 					)
@@ -65,7 +65,19 @@ namespace Neurones
   
         public Neurone withValue(Layer prevLayer)
         {
-            return new DeepNeurone(this.index, this.outputValue(prevLayer), this.bias, this.activation, this.synapses.ToArray());
+            return 
+				new DeepNeurone(
+					this.index,
+					new Add(
+						new Add(
+							this.synapses.ToList().Select(s => s.value(prevLayer)).ToArray()
+						),
+						new DefaultNumber(this.bias)
+					), 
+					this.bias, 
+					this.activation, 
+					this.synapses.ToArray()
+				);
         }
 
         
@@ -107,7 +119,7 @@ namespace Neurones
 		{
 			var sb = new StringBuilder();
 			sb.Append("[");
-			sb.Append($"{this.value.value()}, ");
+			sb.Append($"{this.activation.apply(this.value).value()}, ");
 			sb.Append(String.Join(", ", this.synapses.Select(s => s.ToString())));
 			sb.Append("]\r\n");
 

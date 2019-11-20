@@ -9,7 +9,7 @@
 
 		public Number derive(Number x)
 		{
-			return new Substr(1, new Exp(x, 2));
+			return new Substr(1, new Exp(new TanH(x), 2));
 		}
 	}
 }

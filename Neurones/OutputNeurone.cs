@@ -12,6 +12,10 @@ namespace Neurones
 		{
 		}
 
+		public OutputNeurone(int index, ActivationFnc activation, params Synapse[] synapses) : this(index, new NullNumber(), 0, activation, synapses)
+		{
+		}
+
 		public OutputNeurone(int index, double bias, params Synapse[] synapses) : this(index, new NullNumber(), bias, new TanHFnc(), synapses)
 		{
 		}
@@ -59,7 +63,19 @@ namespace Neurones
 
 		public Neurone withValue(Layer prevLayer)
 		{
-			return new OutputNeurone(this.index, this.outputValue(prevLayer), this.bias, this.activation, this.synapses.ToArray());
+			return 
+				new OutputNeurone(
+					this.index,
+					new Add(
+						new Add(
+							this.synapses.ToList().Select(s => s.value(prevLayer)).ToArray()
+						),
+						new DefaultNumber(this.bias)
+					), 
+					this.bias, 
+					this.activation, 
+					this.synapses.ToArray()
+				);
 		}
 
 
@@ -74,7 +90,7 @@ namespace Neurones
 					s => 
 						s.withAdjustedWeight(
 							this.activation.derive(this.value),
-							new Substr(this.value, errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult()), 
+							new Substr(this.activation.apply(this.value), errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult()), 
 							prevLayer)
 						).ToArray()
 					);
@@ -92,7 +108,7 @@ namespace Neurones
 							indexNeuroneFrom, 
 							() => this.synapseFrom(indexNeuroneFrom).deriveWeight(
 								this.activation.derive(this.value),
-								new Substr(this.value, errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult())
+								new Substr(this.activation.apply(this.value), errors.FirstOrDefault(e => e.neuroneIndex() == this.index).expectedResult())
 							)
 						);
 		}

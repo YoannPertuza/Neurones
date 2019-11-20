@@ -409,6 +409,102 @@ namespace NeuronesTest
 
 			var r = result.neuroneValue(1).value();
 		}
+
+		[TestMethod]
+		public void XORProblem()
+		{
+			var network = new Network(
+				new List<Layer>() {
+					new DeepLayer(
+							new DeepNeurone(
+								1,
+								new LeakyReLUFnc(),
+								new Synapse(1, 1, -0.36376578),
+								new Synapse(2, 1, -0.9752173)
+							),
+							new DeepNeurone(
+								2,
+								new LeakyReLUFnc(),
+								new Synapse(1, 2, -1.1924702),
+								new Synapse(2, 2, 1.1387202)
+							)
+						),
+					   new OutputLayer(
+							new OutputNeurone(
+								1,
+								new SigmoidFnc(),
+								new Synapse(1, 1, 0.56955063),
+								new Synapse(2, 1, 0.27998888)
+							)
+						)});
+
+			var trainedValues = new List<TrainingValue>();
+
+			for (var i = 0; i < 1000; i++)
+			{
+				trainedValues.Add(new TrainingValue(
+						new InputLayer(
+							new InputNeurone(1, 0),
+							new InputNeurone(2, 0)
+						),
+						new List<ExitError>() {
+							new ExitError(1, 1),
+						}));
+
+				trainedValues.Add(new TrainingValue(
+						new InputLayer(
+							new InputNeurone(1, 0),
+							new InputNeurone(2, 1)
+						),
+						new List<ExitError>() {
+							new ExitError(1, 0),
+						}));
+
+				trainedValues.Add(new TrainingValue(
+						new InputLayer(
+							new InputNeurone(1, 1),
+							new InputNeurone(2, 0)
+						),
+						new List<ExitError>() {
+							new ExitError(1, 0),
+						}));
+
+				trainedValues.Add(new TrainingValue(
+						new InputLayer(
+							new InputNeurone(1, 1),
+							new InputNeurone(2, 1)
+						),
+						new List<ExitError>() {
+							new ExitError(1, 1),
+						}));
+			}
+
+			var trainedNt = network.train(trainedValues);
+			var result1 = trainedNt.predict(new InputLayer(
+							new InputNeurone(1, 0),
+							new InputNeurone(2, 0)
+						));
+
+			var result2 = trainedNt.predict(new InputLayer(
+							new InputNeurone(1, 0),
+							new InputNeurone(2, 1)
+						));
+
+			var result3 = trainedNt.predict(new InputLayer(
+							new InputNeurone(1, 1),
+							new InputNeurone(2, 0)
+						));
+
+			var result4 = trainedNt.predict(new InputLayer(
+							new InputNeurone(1, 1),
+							new InputNeurone(2, 1)
+						));
+
+			Console.WriteLine(result1.neuroneValue(1).value());
+			Console.WriteLine(result2.neuroneValue(1).value());
+			Console.WriteLine(result3.neuroneValue(1).value());
+			Console.WriteLine(result4.neuroneValue(1).value());
+		}
 	}
 
 	

@@ -65,7 +65,7 @@
     <Compile Include="Operation\TanHFnc.cs" />
     <Compile Include="OutputLayer.cs" />
     <Compile Include="OutputNeurone.cs" />
-    <Compile Include="Operation\PreLU.cs" />
+    <Compile Include="Operation\ReLU.cs" />
     <Compile Include="Propagation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Operation\Sigmoid.cs" />
