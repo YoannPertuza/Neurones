@@ -413,34 +413,57 @@ namespace NeuronesTest
 		[TestMethod]
 		public void XORProblem()
 		{
+			var r = new Random();
+
 			var network = new Network(
 				new List<Layer>() {
 					new DeepLayer(
 							new DeepNeurone(
 								1,
-								new LeakyReLUFnc(),
-								new Synapse(1, 1, -0.36376578),
-								new Synapse(2, 1, -0.9752173)
+								new SigmoidFnc(),
+								new Synapse(1, 1, r.NextDouble()),
+								new Synapse(2, 1, r.NextDouble())
 							),
 							new DeepNeurone(
 								2,
-								new LeakyReLUFnc(),
-								new Synapse(1, 2, -1.1924702),
-								new Synapse(2, 2, 1.1387202)
+								new SigmoidFnc(),
+								new Synapse(1, 2, r.NextDouble()),
+								new Synapse(2, 2, r.NextDouble())
+							),
+							new DeepNeurone(
+								3,
+								new SigmoidFnc(),
+								new Synapse(1, 3, r.NextDouble()),
+								new Synapse(2, 3, r.NextDouble())
+							),
+							new DeepNeurone(
+								4,
+								new SigmoidFnc(),
+								new Synapse(1, 4, r.NextDouble()),
+								new Synapse(2, 4, r.NextDouble())
+							),
+							new DeepNeurone(
+								5,
+								new SigmoidFnc(),
+								new Synapse(1, 5, r.NextDouble()),
+								new Synapse(2, 5, r.NextDouble())
 							)
 						),
 					   new OutputLayer(
 							new OutputNeurone(
 								1,
 								new SigmoidFnc(),
-								new Synapse(1, 1, 0.56955063),
-								new Synapse(2, 1, 0.27998888)
+								new Synapse(1, 1, r.NextDouble()),
+								new Synapse(2, 1, r.NextDouble()),
+								new Synapse(3, 1, r.NextDouble()),
+								new Synapse(4, 1, r.NextDouble()),
+								new Synapse(5, 1, r.NextDouble())
 							)
 						)});
 
 			var trainedValues = new List<TrainingValue>();
 
-			for (var i = 0; i < 1000; i++)
+			for (var i = 0; i < 2000; i++)
 			{
 				trainedValues.Add(new TrainingValue(
 						new InputLayer(

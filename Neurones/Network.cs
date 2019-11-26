@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Neurones
 {
-	public class Network
-    {
+	public class Network : IDisposable
+	{
         public Network(IEnumerable<Layer> layers)
         {
             this.layers = layers;
         }
 
         private IEnumerable<Layer> layers;
+		bool disposed = false;
+		// Instantiate a SafeHandle instance.
+		SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
 		public Network train(IEnumerable<TrainingValue> trainingValues)
 		{	
@@ -40,7 +46,26 @@ namespace Neurones
 		{
 			return new LinkedPrevLayer(new InputLayer(), this.layers.ToArray()).link().lastLayer();
 		}
-    }
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposed)
+				return;
+
+			if (disposing)
+			{
+				handle.Dispose();
+			}
+
+			disposed = true;
+		}
+	}
 
 	public class TrainingValue
 	{
