@@ -1,13 +1,10 @@
-﻿using Microsoft.Win32.SafeHandles;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace Neurones
 {
-    public class LinkedPrevLayer : IDisposable
-	{
+    public class LinkedPrevLayer
+    {
         public LinkedPrevLayer(Layer inputLayer) : this(inputLayer, new List<Layer>().ToArray())
         {
         }
@@ -24,11 +21,8 @@ namespace Neurones
 
 		private Layer inputLayer;
         private IEnumerable<Layer> layers;
-		bool disposed = false;
-		// Instantiate a SafeHandle instance.
-		SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
-
-		public Layer lastLayer()
+       
+        public Layer lastLayer()
         {
             return this.inputLayer;
         }
@@ -48,29 +42,10 @@ namespace Neurones
             }            
         }
 
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposed)
-				return;
-
-			if (disposing)
-			{
-				handle.Dispose();
-			}
-
-			disposed = true;
-		}
-
-
+		
 	}
 
-	public class LinkedNextLayer : IDisposable
+	public class LinkedNextLayer
 	{
 		
 
@@ -90,9 +65,6 @@ namespace Neurones
 
 		private Layer inputLayer;
 		private IEnumerable<Layer> layers;
-		bool disposed = false;
-		// Instantiate a SafeHandle instance.
-		SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
 		public LinkedNextLayer link()
 		{
@@ -112,25 +84,6 @@ namespace Neurones
 		public Layer firstLayer()
 		{
 			return this.inputLayer;
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposed)
-				return;
-
-			if (disposing)
-			{
-				handle.Dispose();
-			}
-
-			disposed = true;
 		}
 	}
 

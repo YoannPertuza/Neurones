@@ -1,14 +1,12 @@
-﻿using Microsoft.Win32.SafeHandles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Neurones
 {
-	public class OutputLayer : Layer, IDisposable
-	{
+	public class OutputLayer : Layer
+    {
         public OutputLayer(params Neurone[] neurones) : this(0, new NullLayer(), neurones)
         {
         }
@@ -29,11 +27,7 @@ namespace Neurones
         private IEnumerable<Neurone> neurones;
         private Layer prevLayer;
 
-		bool disposed = false;
-		// Instantiate a SafeHandle instance.
-		SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
-
-		public Number neuroneValue(int originNeurone)
+        public Number neuroneValue(int originNeurone)
         {
             return neurones.ToList().Find(n => n.find(originNeurone)).outputValue(this.prevLayer);
         }
@@ -121,25 +115,6 @@ namespace Neurones
 			return new Add(
 				this.neurones.Select(n => n.deriveRespectToWeight(errors, new NullLayer(), indexNeuroneFrom)).ToArray()
 			);
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposed)
-				return;
-
-			if (disposing)
-			{
-				handle.Dispose();
-			}
-
-			disposed = true;
 		}
 	}
 
